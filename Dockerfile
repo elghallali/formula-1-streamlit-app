@@ -1,17 +1,18 @@
-# Use an official Python runtime as a parent image
-FROM python:3.8
+# app/Dockerfile
 
-# Set the working directory to /app
+FROM python:3.9-slim
+
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+COPY requirements.txt ./requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-# Make port 8501 available to the world outside this container
 EXPOSE 8501
 
-# Define the command to run your application
-CMD ["streamlit", "run", "app.py"]
+COPY . /app
+
+
+ENTRYPOINT ["streamlit", "run"]
+
+CMD [ "app.py" ]
