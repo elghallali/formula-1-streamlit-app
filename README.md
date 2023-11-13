@@ -24,10 +24,20 @@
 
 ### Importation of code source and run it in your operating system (Windows)
 
+#### Create a new folder in your PC and open it in your Command Prompt (cmd)  
+
+
+
 #### Clone code source from github repository
 
 ```cmd
 git clone https://github.com/elghallali/formula-1-streamlit-app.git
+```
+
+#### Change directory
+
+```cmd
+cd formula-1-streamlit-app
 ```
 
 #### Create a Virtual environment
