@@ -23,7 +23,7 @@ def load_data(path:str):
 
 csv_files = glob.glob('data/*.csv')
 
-st.markdown(f'# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=200/> Formula 1 EDA',unsafe_allow_html=True)
+st.markdown(f'# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Formula 1 EDA',unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
 hide_st_style = """
             <style>
