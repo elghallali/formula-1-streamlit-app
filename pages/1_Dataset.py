@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 import pandas as pd
 import plotly.express as px
 import os
@@ -7,10 +8,12 @@ import io
 import warnings
 
 warnings.filterwarnings('ignore')
+path_file = os.getcwd()+ '/images/f1_logo.png'
+logo = Image.open(path_file)
 
 st.set_page_config(
     page_title='Formula 1 Prediction | ELT',
-    page_icon=':bar_chart:',
+    page_icon=logo,
     layout='wide'
 )
 @st.cache_data
@@ -20,7 +23,16 @@ def load_data(path:str):
 
 csv_files = glob.glob('data/*.csv')
 
-st.title(':bar_chart: Formula 1 EDA')
+st.markdown(f'# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=200/> Formula 1 EDA',unsafe_allow_html=True)
+st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 for file in csv_files:
@@ -46,7 +58,7 @@ for file in csv_files:
         s = buffer.getvalue()
         tab4.text(s)
         tab5.subheader('')
-        tab5.write("HI")
+        tab5.write("H")
     
 
 

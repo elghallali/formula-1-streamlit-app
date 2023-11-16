@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -9,9 +10,12 @@ import io
 import warnings
 warnings.filterwarnings('ignore')
 
+path_file = os.getcwd()+ '/images/f1_logo.png'
+logo = Image.open(path_file)
+
 st.set_page_config(
     page_title='Formula 1 Prediction | Dashboard',
-    page_icon=':bar_chart:',
+    page_icon=logo,
     layout='wide'
 )
 
@@ -47,8 +51,16 @@ def plot_metric(label, value, prefix="", suffix="", show_graph=False, color_grap
 
     st.plotly_chart(fig, use_container_width=True)
 
-st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=300/> Dashboard',unsafe_allow_html=True)
+st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=200/> Dashboard',unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 with st.container():
     col1,col2,col3 = st.columns([1,2,1])
@@ -85,9 +97,8 @@ with st.container():
         fig.update_layout(clickmode='event+select')
         st.plotly_chart(fig, use_container_width=True)
     with col2:
-        df = px.data.gapminder()
-        fig = px.line(df, x="year", y="lifeExp", color="continent", line_group="country", hover_name="country",
-                line_shape="spline", render_mode="svg")
+        df = px.data.gapminder().query("country=='Canada'")
+        fig = px.line(df, x="year", y="lifeExp", title='Life expectancy in Canada')
         fig.update_layout(clickmode='event+select')
         st.plotly_chart(fig, use_container_width=True)
     with col_3:
