@@ -20,6 +20,8 @@ st.set_page_config(
     page_icon=logo,
     layout='wide'
 )
+
+st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Dashboard',unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
 hide_st_style = """
             <style>
@@ -30,7 +32,24 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Dashboard',unsafe_allow_html=True)
+def component(name, value):
+    st.markdown(f"""
+        <br>
+
+        > {name}
+        >
+        > {value}
+                    """, unsafe_allow_html=True)
+    
+def component2(title,name, value):
+    st.markdown(f"""
+        **{title}**
+
+        > {name}
+        >
+        > {value}
+                    """, unsafe_allow_html=True)
+
 with st.container():
     tab_1, tab_2 = st.tabs(['Drivers', 'Teams'])
 
@@ -75,55 +94,19 @@ with st.container():
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
-                    st.markdown("""
-        <br>
-
-        > Good morning
-        >
-        > 45
-                    """, unsafe_allow_html=True)
+                    component("Good morning", 45)
                 with col5:
-                    st.markdown("""
-        <br>
-
-        > Good morning
-        >
-        > 45
-                    """, unsafe_allow_html=True)
+                    component("Good morning", 45)
             with col2:
                 col6,col7,col8,col9 = st.columns(4)
                 with col6:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good morning", 45)
                 with col7:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good evening", 50)
                 with col8:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good night", 70)
                 with col9:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good afternoon", 40)
             with col3:
                 col_input1, col_input2 = st.columns(2)
                 with col_input1:
@@ -132,7 +115,7 @@ with st.container():
                     number_max = st.number_input('', value=2023, min_value=1950, max_value=2023, step=1)
                 values = st.slider(
                 '',
-                1950, 2023, (1950, 2010))
+                1950, 2023, (number_min, number_max))
 
         with st.container():
             col1,col2,col_3 = st.columns([2,3,3])
@@ -401,3 +384,4 @@ with st.container():
                 fig.update_traces(root_color="lightgrey")
                 fig.update_layout(margin = dict(t=50, l=25, r=25, b=25),clickmode='event+select')
                 st.plotly_chart(fig, use_container_width=True)
+

@@ -1,7 +1,6 @@
 import streamlit as st
 from PIL import Image
 import pandas as pd
-import plotly.express as px
 import os
 import glob
 import io
@@ -34,18 +33,18 @@ hide_st_style = """
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-
+data = {}
 for file in csv_files:
-    df = pd.read_csv(file, index_col=0)
     title = file.replace('\\','/').split('/')[-1].split('.')[0].replace('_',' ').capitalize()
-    st.write(f"### {title}")
     df = load_data(file)
+    data[title]= df
 
+def visualDataFrame(df):
     with st.expander("Data Preview"):
         options = st.multiselect(
             'DataFrame Columns',
             list(df.columns),list(df.columns))
-        
+
         tab1, tab2, tab3, tab4,tab5 = st.tabs([":card_file_box: Data", "Types", 'NAN', 'Info', 'Unique Values'])
         with tab1:
             st.subheader("A tab with a data")
@@ -53,29 +52,32 @@ for file in csv_files:
                      column_config={
                          "year": st.column_config.NumberColumn(format="%d")
                      })
-            
+
         with tab2:
             st.subheader("Column type :")
             st.text(df[options].dtypes)
-
         with tab3:
             st.subheader("Null values :")
             st.text(df[options].isna().sum())
-
         with tab4:
             st.subheader('DataFrame Info')
             buffer = io.StringIO()
             df[options].info(buf=buffer)
             s = buffer.getvalue()
             st.text(s)
-
         with tab5:
             st.subheader('')
             st.write("H")
-        
+
     
+data_set = st.multiselect(
+        '**Data Frames**',
+        list(data.keys()),list(data.keys()))
+
+for dataset in data_set:
+    st.write(f"### {dataset}")
+    visualDataFrame(data[dataset])
 
 
-st.markdown('<style> div.block-container {padding-top: 1rem;}</style>',unsafe_allow_html=True)
 
 
