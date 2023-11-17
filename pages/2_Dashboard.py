@@ -8,6 +8,8 @@ import os
 import glob
 import io
 import warnings
+
+from utils.graphs import gauge, pie, plot, scatter
 warnings.filterwarnings('ignore')
 
 path_file = os.getcwd()+ '/images/f1_logo.png'
@@ -137,22 +139,15 @@ with st.container():
             with col1:
                 labels = ['Oxygen','Hydrogen','Carbon_Dioxide','Nitrogen']
                 values = [4500, 2500, 1053, 1500]
-
                 # Use `hole` to create a donut-like pie chart
-                fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7)])
-                fig.update_layout(clickmode='event+select')
-                st.plotly_chart(fig, use_container_width=True)
+                pie(labels,values)
             with col2:
                 df = px.data.gapminder().query("country=='Canada'")
-                fig = px.line(df, x="year", y="lifeExp", title='Life expectancy in Canada')
-                fig.update_layout(clickmode='event+select')
-                st.plotly_chart(fig, use_container_width=True)
+                plot(df, x="year", y="lifeExp", title='Life expectancy in Canada')
             with col_3:
                 df = px.data.gapminder()
-                fig = px.scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp", size="pop", color="continent",
+                scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp",  
                                 hover_name="country", log_x=True, size_max=60)
-                fig.update_layout(clickmode='event+select')
-                st.plotly_chart(fig, use_container_width=True)
 
         with st.container():
             col1,col2,col3,col4 = st.columns([3,3,2,3])
@@ -201,34 +196,11 @@ with st.container():
 
 
             with col3:
-                fig = go.Figure(go.Indicator(
-                    mode = "gauge+number",
-                    value = 70,
-                    domain = {'x': [0, 1], 'y': [0, 1]},
-                    number={
-                                "suffix": " %",
-                            },
-                    title = {'text': "Finished Race (%)"}))
-                fig.update_layout(font = {'color': "darkblue", 'family': "Arial"}, height=200,
-                margin=dict(l=10, r=10, t=50, b=10, pad=8))
-                st.plotly_chart(fig, use_container_width=True)
-
-                fig = go.Figure(go.Indicator(
-                    mode = "gauge+number",
-                    value = 40,
-                    domain = {'x': [0, 1], 'y': [0, 1]},
-                    number={
-                                "suffix": " %",
-                            },
-                    title = {'text': "Accident (%)"}))
-                fig.update_layout(font = {'color': "darkblue", 'family': "Arial"}, height=200,
-                margin=dict(l=10, r=10, t=50, b=10, pad=8))
-                st.plotly_chart(fig, use_container_width=True)
+                gauge(70," %","Finished Race (%)")
+                gauge(70," %","Accident (%)")
             with col4:
                 df = px.data.tips()
-                fig = px.scatter(df, x="total_bill", y="tip")
-                fig.update_layout(clickmode='event+select')
-                st.plotly_chart(fig, use_container_width=True)
+                scatter(df, x="total_bill", y="tip")
 
 
 

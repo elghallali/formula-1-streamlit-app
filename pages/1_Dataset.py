@@ -42,23 +42,37 @@ for file in csv_files:
     df = load_data(file)
 
     with st.expander("Data Preview"):
+        options = st.multiselect(
+            'DataFrame Columns',
+            list(df.columns),list(df.columns))
+        
         tab1, tab2, tab3, tab4,tab5 = st.tabs([":card_file_box: Data", "Types", 'NAN', 'Info', 'Unique Values'])
-        tab1.subheader("A tab with a data")
-        tab1.dataframe(df,
+        with tab1:
+            st.subheader("A tab with a data")
+            st.dataframe(df[options],
                      column_config={
                          "year": st.column_config.NumberColumn(format="%d")
                      })
-        tab2.subheader("Column type :")
-        tab2.text(df.dtypes)
-        tab3.subheader("Null values :")
-        tab3.text(df.isna().sum())
-        tab4.subheader('DataFrame Info')
-        buffer = io.StringIO()
-        df.info(buf=buffer)
-        s = buffer.getvalue()
-        tab4.text(s)
-        tab5.subheader('')
-        tab5.write("H")
+            
+        with tab2:
+            st.subheader("Column type :")
+            st.text(df[options].dtypes)
+
+        with tab3:
+            st.subheader("Null values :")
+            st.text(df[options].isna().sum())
+
+        with tab4:
+            st.subheader('DataFrame Info')
+            buffer = io.StringIO()
+            df[options].info(buf=buffer)
+            s = buffer.getvalue()
+            st.text(s)
+
+        with tab5:
+            st.subheader('')
+            st.write("H")
+        
     
 
 
