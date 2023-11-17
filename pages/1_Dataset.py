@@ -37,7 +37,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 for file in csv_files:
     df = pd.read_csv(file, index_col=0)
-    title = file.split('\\')[-1].split('.')[0].replace('_',' ').capitalize()
+    title = file.replace('\\','/').split('/')[-1].split('.')[0].replace('_',' ').capitalize()
     st.write(f"### {title}")
     df = load_data(file)
 
