@@ -108,14 +108,9 @@ with st.container():
                 with col9:
                     component2("Hi","Good afternoon", 40)
             with col3:
-                col_input1, col_input2 = st.columns(2)
-                with col_input1:
-                    number_min = st.number_input('**Seasons**', value=1950, min_value=1950, max_value=2023, step=1)
-                with col_input2:
-                    number_max = st.number_input('', value=2023, min_value=1950, max_value=2023, step=1)
                 values = st.slider(
-                '',
-                1950, 2023, (number_min, number_max))
+                '**Seasons**',
+                1950, 2023, (1950, 2023))
 
         with st.container():
             col1,col2,col_3 = st.columns([2,3,3])
