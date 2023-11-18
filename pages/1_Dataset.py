@@ -79,6 +79,3 @@ data_set = st.multiselect(
 for dataset in data_set:
     st.write(f"### {dataset}")
     visualDataFrame(data[dataset])
-
-
-
