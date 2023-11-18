@@ -6,6 +6,8 @@ import glob
 import io
 import warnings
 
+from etl.extracts import Extracts
+
 warnings.filterwarnings('ignore')
 path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
@@ -36,7 +38,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 data = {}
 for file in csv_files:
     title = file.replace('\\','/').split('/')[-1].split('.')[0].replace('_',' ').capitalize()
-    df = load_data(file)
+    df = Extracts(file).load_data()
     data[title]= df
 
 def visualDataFrame(df):
@@ -77,7 +79,6 @@ data_set = st.multiselect(
 for dataset in data_set:
     st.write(f"### {dataset}")
     visualDataFrame(data[dataset])
-
 
 
 
