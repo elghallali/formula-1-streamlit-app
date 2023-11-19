@@ -49,6 +49,14 @@ def component2(title,name, value):
         >
         > {value}
                     """, unsafe_allow_html=True)
+    
+def update_season_input_drivers():
+    st.session_state.min_seasons_value_driver = st.session_state.divers_slider[0]
+    st.session_state.max_seasons_value_driver = st.session_state.divers_slider[1]
+
+def update_season_input_teams():
+    st.session_state.min_seasons_value_teams = st.session_state.teams_slider[0]
+    st.session_state.max_seasons_value_teams = st.session_state.teams_slider[1]
 
 with st.container():
     tab_1, tab_2 = st.tabs(['Drivers', 'Teams'])
@@ -108,9 +116,16 @@ with st.container():
                 with col9:
                     component2("Hi","Good afternoon", 40)
             with col3:
+                col_input1,col_input2 = st.columns(2)
+                with col_input1:
+                    min_number = st.number_input(label='**Seasons**', min_value=1950, max_value=2023, value=1950, step=1, format=None, key='min_seasons_value_driver')
+                with col_input2:
+                    max_number = st.number_input(label='', min_value=1950, max_value=2023, value=2023, step=1, format=None, key='max_seasons_value_driver')
                 values = st.slider(
-                '**Seasons**',
-                1950, 2023, (1950, 2023))
+                '',
+                1950, 2023, (1950, 2023),
+                key='divers_slider',
+                on_change=update_season_input_drivers)
 
         with st.container():
             col1,col2,col_3 = st.columns([2,3,3])
@@ -220,64 +235,30 @@ with st.container():
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
-                    st.markdown("""
-        <br>
-
-        > Good morning
-        >
-        > 45
-                    """, unsafe_allow_html=True)
+                    component("Good morning", 45)
                 with col5:
-                    st.markdown("""
-        <br>
-
-        > Good morning
-        >
-        > 45
-                    """, unsafe_allow_html=True)
+                    component("Good morning", 45)
             with col2:
                 col6,col7,col8,col9 = st.columns(4)
                 with col6:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good morning", 45)
                 with col7:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good evening", 50)
                 with col8:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good night", 70)
                 with col9:
-                    st.markdown("""
-        **Hi**
-
-        > Good morning
-        >
-        > 45
-                    """)
+                    component2("Hi","Good afternoon", 40)
             with col3:
-                col_input1, col_input2 = st.columns(2)
+                col_input1,col_input2 = st.columns(2)
                 with col_input1:
-                    number_min = st.number_input('**Seasons:**', value=1950, min_value=1950, max_value=2023, step=1)
+                    min_number = st.number_input(label='**Seasons**', min_value=1950, max_value=2023, value=1950, step=1, format=None, key='min_seasons_value_teams')
                 with col_input2:
-                    number_max = st.number_input(' ', value=2023, min_value=1950, max_value=2023, step=1)
+                    max_number = st.number_input(label='', min_value=1950, max_value=2023, value=2023, step=1, format=None, key='max_seasons_value_teams')
                 values = st.slider(
-                ' ',
-                1950, 2023, (1950, 2010))
+                '**Seasons**',
+                1950, 2023, (min_number, max_number),
+                key ='teams_slider',
+                on_change=update_season_input_teams)
 
         with st.container():
             col1,col2,col_3 = st.columns([2,3,3])
@@ -379,4 +360,6 @@ with st.container():
                 fig.update_traces(root_color="lightgrey")
                 fig.update_layout(margin = dict(t=50, l=25, r=25, b=25),clickmode='event+select')
                 st.plotly_chart(fig, use_container_width=True)
+
+
 
