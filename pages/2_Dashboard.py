@@ -1,3 +1,8 @@
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
 import streamlit as st
 from PIL import Image
 import pandas as pd
@@ -6,22 +11,39 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
 import os
-import glob
 import io
 import warnings
-from etl.extracts import Extracts
-
 from utils.graphs import gauge, pie, plot, scatter
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 warnings.filterwarnings('ignore')
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 st.set_page_config(
     page_title='Formula 1 Prediction | Dashboard',
     page_icon=logo,
     layout='wide'
 )
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Dashboard',unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>', unsafe_allow_html=True)
@@ -33,6 +55,11 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 circuits = pd.read_csv(os.getcwd() +'/data/circuits.csv')
 laptimes = pd.read_csv(os.getcwd() +'/data/lap_times.csv')
@@ -48,7 +75,12 @@ constructor_results = pd.read_csv(os.getcwd() +'/data/constructor_results.csv')
 results = pd.read_csv(os.getcwd() +'/data/results.csv')
 qualifying = pd.read_csv(os.getcwd() +'/data/qualifying.csv')
 
-    
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
 def component(title,name, value):
     st.markdown(f"""
         **{title}**
@@ -58,75 +90,53 @@ def component(title,name, value):
         > {value}
                     """, unsafe_allow_html=True)
     
-def update_season_input_drivers():
-    st.session_state.min_seasons_value_driver = st.session_state.divers_slider[0]
-    st.session_state.max_seasons_value_driver = st.session_state.divers_slider[1]
-
-def update_season_input_teams():
-    st.session_state.min_seasons_value_teams = st.session_state.teams_slider[0]
-    st.session_state.max_seasons_value_teams = st.session_state.teams_slider[1]
-
-total_driver = duckdb.sql(
-        f"""
-        
-        SELECT COUNT(driverId) AS driver FROM drivers
-        """
-    ).df()
-
-total_races = duckdb.sql(
-    f"""
-    SELECT COUNT(raceId) AS races FROM races
-    """
-).df()
 
 
+
+
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
+
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
+
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 with st.container():
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
     tab_1, tab_2 = st.tabs(['Drivers', 'Teams'])
 
     with tab_1:
-        with st.container():
-            col_1,col_2,col_3,col_4,col_5,col_6,col_7,col_8 = st.columns([2,1,1,1,1,1,1,1])
-            with col_2:
-                st.markdown("**Race Name**")
-                with st.expander("All"):
-                    option_1 = st.checkbox('initial velocity (u)')
-                    option_2 = st.checkbox('final velocity (v)')
-                    option_3 = st.checkbox('acceleration (a)')
-                    option_4 = st.checkbox('time (t)')
-            with col_3:
-                st.markdown("**Driver Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_4:
-                st.markdown("**Driver Nationality**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_5:
-                st.markdown("**Brand Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_6:
-                st.markdown("**Brand Nationality**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_7:
-                st.markdown("**Circuit Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_8:
-                st.markdown("**Circuit Country**")
-                with st.expander("All"):
-                    st.write("HI")
-
-
+        duckdb_connection = duckdb.connect()
         with st.container():
             col1,col2,col3 = st.columns([1,2,1])
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
+                    total_driver = duckdb.sql(f"""
+                        SELECT COUNT(driverId) AS driver FROM drivers
+                    """).df()
                     component("**Total Driver**", "<br>", total_driver.loc[0,'driver'])
                 with col5:
+                    total_races = duckdb.sql(f"""
+                            SELECT COUNT(raceId) AS races FROM races
+                        """).df()
                     component("**Total Races**", "<br>", total_races.loc[0,'races'])
             with col2:
                 col6,col7,col8,col9 = st.columns([2,3,2,2])
@@ -139,18 +149,14 @@ with st.container():
                 with col9:
                     component("Biggest Win Rate","Good afternoon", 40)
             with col3:
-                col_input1,col_input2 = st.columns(2)
-                with col_input1:
-                    min_number = st.number_input(label='**Seasons**', min_value=1950, max_value=2023, value=1950, step=1, format=None, key='min_seasons_value_driver')
-                with col_input2:
-                    max_number = st.number_input(label='', min_value=min_number, max_value=2023, value=2023, step=1, format=None, key='max_seasons_value_driver')
+                
                 year_values = st.slider(
-                '',
-                1950, 2023, (min_number, max_number),
-                key='divers_slider',
-                on_change=update_season_input_drivers)
+                '**Seasons:**',
+                1950, 2023, (1950, 2023),
+                key='divers_slider')
 
         with st.container():
+
             col1,col2,col_3 = st.columns([2,3,3])
             with col1:
                 labels = ['Oxygen','Hydrogen','Carbon_Dioxide','Nitrogen']
@@ -158,20 +164,27 @@ with st.container():
                 # Use `hole` to create a donut-like pie chart
                 pie(labels,values)
             with col2:
-                selected_start_year, selected_end_year = year_values
-                total_drivers_years = duckdb.sql(f"""
-                    SELECT
-                        COUNT(r.driverId) AS Driver,
-                        DATE_PART('year', ra.year) as Years
-                    FROM
-                        results r
-                    JOIN
-                        races ra ON r.raceId = ra.raceId
-                    GROUP BY DATE_PART('year', ra.year)
-                    ORDER BY DATE_PART('year', ra.year)
-                """
-                ).df()
-                plot(total_drivers_years, x="Years", y="Driver", title='Total Driver')
+                # Validate and use the selected years
+                if year_values[0] <= year_values[1]:
+                    selected_start_year, selected_end_year = year_values
+
+                    # Using string formatting (be cautious about SQL injection)
+                    query = f"""
+                        SELECT
+                            COUNT(DISTINCT r.driverId) AS Driver,
+                            DATE_PART('year', ra.year) as Season
+                        FROM
+                            results r
+                        JOIN
+                            races ra ON r.raceId = ra.raceId
+                        WHERE Season BETWEEN {selected_start_year} AND {selected_end_year}
+                        GROUP BY DATE_PART('year', ra.year)
+                        ORDER BY DATE_PART('year', ra.year)
+                    """
+
+                    # Execute the query
+                    total_drivers_years = duckdb_connection.execute(query).df()
+                plot(total_drivers_years, x="Season", y="Driver", title='Total Driver')
             with col_3:
                 df = px.data.gapminder()
                 scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp",  
@@ -201,6 +214,12 @@ with st.container():
 
                 st.plotly_chart(fig, use_container_width=True)
             with col2:
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
                 reason_driver_not_finish_races = duckdb.sql(f"""
                     SELECT 
                         s.status as Status,
@@ -237,55 +256,64 @@ with st.container():
 
 
             with col3:
-                gauge(26.79," %","Finished Race (%)")
-                gauge(4.08," %","Accident (%)")
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+                finished_race = duckdb.sql(f"""
+                    SELECT 
+                        (SELECT COUNT(driverId) FROM results) AS All_Drivers,
+                        (COUNT(r.driverId) * 100.0 / (SELECT COUNT(driverId) FROM results)) AS Percentage_Finished
+                    FROM
+                        results AS r
+                    JOIN
+                        status s ON r.statusId = s.statusId
+                    WHERE s.status IN ('Finished', '%Laps');
+
+                """).df()
+                gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+                accident_race = duckdb.sql(f"""
+                    SELECT 
+                        (SELECT COUNT(driverId) FROM results) AS All_Drivers,
+                        (COUNT(r.driverId) * 100.0 / (SELECT COUNT(driverId) FROM results)) AS Percentage_Accident
+                    FROM
+                        results AS r
+                    JOIN
+                        status s ON r.statusId = s.statusId
+                    WHERE s.status = 'Accident';
+
+                """).df()
+                gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
             with col4:
                 df = px.data.tips()
                 scatter(df, x="total_bill", y="tip")
 
-
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
     with tab_2:
-        with st.container():
-            col_1,col_2,col_3,col_4,col_5,col_6,col_7,col_8 = st.columns([2,1,1,1,1,1,1,1])
-            with col_2:
-                st.markdown("**Race Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_3:
-                st.markdown("**Driver Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_4:
-                st.markdown("**Driver Nationality**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_5:
-                st.markdown("**Brand Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_6:
-                st.markdown("**Brand Nationality**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_7:
-                st.markdown("**Circuit Name**")
-                with st.expander("All"):
-                    st.write("HI")
-            with col_8:
-                st.markdown("**Circuit Country**")
-                with st.expander("All"):
-                    st.write("HI")
-
-
         with st.container():
             col1,col2,col3 = st.columns([1,2,1])
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
-                    component("Good morning", '<br>', 45)
+                    total_brands = duckdb.sql(f"""
+                        SELECT COUNT(constructorId) AS Brand From constructors
+                    """).df()
+                    component("Total Brands", '<br>', total_brands.loc[0,'Brand'])
                 with col5:
-                    component("Good morning", '<br>', 45)
+                    total_races = duckdb.sql(f"""
+                            SELECT COUNT(raceId) AS races FROM races
+                                             
+                        """).df()
+                    component("**Total Races**", "<br>", total_races.loc[0,'races'])
             with col2:
                 col6,col7,col8,col9 = st.columns(4)
                 with col6:
@@ -297,16 +325,10 @@ with st.container():
                 with col9:
                     component("Hi","Good afternoon", 40)
             with col3:
-                col_input1,col_input2 = st.columns(2)
-                with col_input1:
-                    min_number = st.number_input(label='**Seasons**', min_value=1950, max_value=2023, value=1950, step=1, format=None, key='min_seasons_value_teams')
-                with col_input2:
-                    max_number = st.number_input(label='', min_value=1950, max_value=2023, value=2023, step=1, format=None, key='max_seasons_value_teams')
-                values = st.slider(
-                '',
-                1950, 2023, (min_number, max_number),
-                key ='teams_slider',
-                on_change=update_season_input_teams)
+                year_values_teams = st.slider(
+                '**Seasons:**',
+                1950, 2023, (1950, 2023),
+                key ='teams_slider')
 
         with st.container():
             col1,col2,col_3 = st.columns([2,3,3])
@@ -319,10 +341,27 @@ with st.container():
                 fig.update_layout(clickmode='event+select')
                 st.plotly_chart(fig, use_container_width=True)
             with col2:
-                df = px.data.gapminder().query("country=='Canada'")
-                fig = px.line(df, x="year", y="lifeExp", title='Life expectancy in Canada')
-                fig.update_layout(clickmode='event+select')
-                st.plotly_chart(fig, use_container_width=True)
+                # Validate and use the selected years
+                if year_values_teams[0] <= year_values_teams[1]:
+                    selected_start_year, selected_end_year = year_values_teams
+
+                    # Using string formatting (be cautious about SQL injection)
+                    query2 = f"""
+                        SELECT
+                            COUNT(DISTINCT r.constructorId) AS Brand,
+                            DATE_PART('year', ra.year) as Season
+                        FROM
+                            results r
+                        JOIN
+                            races ra ON r.raceId = ra.raceId
+                        WHERE Season BETWEEN {selected_start_year} AND {selected_end_year}
+                        GROUP BY DATE_PART('year', ra.year)
+                        ORDER BY DATE_PART('year', ra.year)
+                    """
+
+                    # Execute the query
+                    total_drivers_years_team = duckdb_connection.execute(query2).df()
+                plot(total_drivers_years_team, x="Season", y="Brand", title='Total Brand')
             with col_3:
                 df = px.data.gapminder()
                 fig = px.scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp", size="pop", color="continent",
@@ -333,18 +372,23 @@ with st.container():
         with st.container():
             col1,col2,col3,col4 = st.columns([3,3,2,3])
             with col1:
-                table_data = [['Name', 'Nationality', 'Point'],
-                      ['Montréal<br>Canadiens', 18, 4],
-                      ['Dallas Stars', 18, 5],
-                      ['NY Rangers', 16, 5],
-                      ['Boston<br>Bruins', 13, 8],
-                      ['Chicago<br>Blackhawks', 13, 8],
-                      ['LA Kings', 13, 8],
-                      ['Ottawa<br>Senators', 12, 5]]
+                top_brands_with_points = duckdb.sql(f"""
+                    SELECT
+                        c.name AS Name,
+                        c.nationality AS Nationality,
+                        SUM(r.points) AS Points
+                    FROM
+                        constructors c
+                    JOIN
+                        results r ON c.constructorId = r.driverId
+                    GROUP BY
+                        c.constructorId, c.name, c.nationality
+                    ORDER BY
+                        Points DESC
+                """
+                ).df()
 
-                fig = ff.create_table(table_data, height_constant=40)
-
-
+                fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
                 st.plotly_chart(fig, use_container_width=True)
             with col2:
                 years = [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,

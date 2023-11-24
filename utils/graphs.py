@@ -39,6 +39,7 @@ def gauge(value,suffix,title,font= {'color': "darkblue", 'family': "Arial"}, hei
                                 "valueformat": ".2f"
                             },
                     title = {'text': title},
-                    gauge = {'axis': {'range': [None, 100]}}))
+                    gauge = {'axis': {'range': [None, 100]},
+                             'bar': {'color': '#F63366'}}))
     fig.update_layout(font = font, height=height, margin=margin)
     st.plotly_chart(fig, use_container_width=True)
