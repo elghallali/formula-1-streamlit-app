@@ -421,29 +421,31 @@ with st.container():
 
 
             with col3:
-                fig = go.Figure(go.Indicator(
-                    mode = "gauge+number",
-                    value = 70,
-                    domain = {'x': [0, 1], 'y': [0, 1]},
-                    number={
-                                "suffix": " %",
-                            },
-                    title = {'text': "Finished Race (%)"}))
-                fig.update_layout(font = {'color': "darkblue", 'family': "Arial"}, height=200,
-                margin=dict(l=10, r=10, t=50, b=10, pad=8))
-                st.plotly_chart(fig, use_container_width=True)
+                finished_race = duckdb.sql(f"""
+                    SELECT 
+                        (SELECT COUNT(driverId) FROM results) AS All_Drivers,
+                        (COUNT(r.driverId) * 100.0 / (SELECT COUNT(driverId) FROM results)) AS Percentage_Finished
+                    FROM
+                        results AS r
+                    JOIN
+                        status s ON r.statusId = s.statusId
+                    WHERE s.status IN ('Finished', '%Laps');
 
-                fig = go.Figure(go.Indicator(
-                    mode = "gauge+number",
-                    value = 40,
-                    domain = {'x': [0, 1], 'y': [0, 1]},
-                    number={
-                                "suffix": " %",
-                            },
-                    title = {'text': "Accident (%)"}))
-                fig.update_layout(font = {'color': "darkblue", 'family': "Arial"}, height=200,
-                margin=dict(l=10, r=10, t=50, b=10, pad=8))
-                st.plotly_chart(fig, use_container_width=True)
+                """).df()
+                gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
+
+                accident_race = duckdb.sql(f"""
+                    SELECT 
+                        (SELECT COUNT(driverId) FROM results) AS All_Drivers,
+                        (COUNT(r.driverId) * 100.0 / (SELECT COUNT(driverId) FROM results)) AS Percentage_Accident
+                    FROM
+                        results AS r
+                    JOIN
+                        status s ON r.statusId = s.statusId
+                    WHERE s.status = 'Accident';
+
+                """).df()
+                gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
             with col4:
                 fig = px.treemap(
                     names = ["Eve","Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
