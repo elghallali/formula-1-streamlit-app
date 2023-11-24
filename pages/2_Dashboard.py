@@ -48,16 +48,8 @@ constructor_results = pd.read_csv(os.getcwd() +'/data/constructor_results.csv')
 results = pd.read_csv(os.getcwd() +'/data/results.csv')
 qualifying = pd.read_csv(os.getcwd() +'/data/qualifying.csv')
 
-def component(name, value):
-    st.markdown(f"""
-        <br>
-
-        > {name}
-        >
-        > {value}
-                    """, unsafe_allow_html=True)
     
-def component2(title,name, value):
+def component(title,name, value):
     st.markdown(f"""
         **{title}**
 
@@ -133,19 +125,19 @@ with st.container():
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
-                    component("**Total Driver**", total_driver.loc[0,'driver'])
+                    component("**Total Driver**", "<br>", total_driver.loc[0,'driver'])
                 with col5:
-                    component("**Total Races**", total_races.loc[0,'races'])
+                    component("**Total Races**", "<br>", total_races.loc[0,'races'])
             with col2:
                 col6,col7,col8,col9 = st.columns([2,3,2,2])
                 with col6:
-                    component2("Most Winning Racer","Good morning", 45)
+                    component("Most Winning Racer","Good morning", 45)
                 with col7:
-                    component2("Most Participating Racer","Good evening", 50)
+                    component("Most Participating Racer","Good evening", 50)
                 with col8:
-                    component2("Top Speed Record","Good night", 70)
+                    component("Top Speed Record","Good night", 70)
                 with col9:
-                    component2("Biggest Win Rate","Good afternoon", 40)
+                    component("Biggest Win Rate","Good afternoon", 40)
             with col3:
                 col_input1,col_input2 = st.columns(2)
                 with col_input1:
@@ -291,19 +283,19 @@ with st.container():
             with col1:
                 col4,col5 = st.columns(2)
                 with col4:
-                    component("Good morning", 45)
+                    component("Good morning", '<br>', 45)
                 with col5:
-                    component("Good morning", 45)
+                    component("Good morning", '<br>', 45)
             with col2:
                 col6,col7,col8,col9 = st.columns(4)
                 with col6:
-                    component2("Hi","Good morning", 45)
+                    component("Hi","Good morning", 45)
                 with col7:
-                    component2("Hi","Good evening", 50)
+                    component("Hi","Good evening", 50)
                 with col8:
-                    component2("Hi","Good night", 70)
+                    component("Hi","Good night", 70)
                 with col9:
-                    component2("Hi","Good afternoon", 40)
+                    component("Hi","Good afternoon", 40)
             with col3:
                 col_input1,col_input2 = st.columns(2)
                 with col_input1:
