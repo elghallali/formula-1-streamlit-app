@@ -6,14 +6,16 @@ import glob
 import io
 import warnings
 
+
 from etl.extracts import Extracts
 
 warnings.filterwarnings('ignore')
+
 path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
 
 st.set_page_config(
-    page_title='Formula 1 Prediction | ELT',
+    page_title='Formula 1 Prediction | ETL',
     page_icon=logo,
     layout='wide'
 )
@@ -38,7 +40,8 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 data = {}
 for file in csv_files:
     title = file.replace('\\','/').split('/')[-1].split('.')[0].replace('_',' ').capitalize()
-    df = Extracts(file).load_data()
+    extension = file.replace('\\','/').split('/')[-1].split('.')[-1]
+    df = Extracts(file, extension).load_data()
     data[title]= df
 
 def visualDataFrame(df):

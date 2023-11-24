@@ -1,12 +1,12 @@
 import pandas as pd
 
 class Extracts:
-    def __init__(self,datasource):
+    def __init__(self,datasource,extension):
         self.datasource = datasource
-        self.extension = datasource.replace('\\','/').split('/')[-1].split('.')[-1]
+        self.extension = extension
 
-    def __read_csv_file(self):
-        df = pd.read_csv(filepath_or_buffer=self.datasource)
+    def __read_csv_file(self, sep=','):
+        df = pd.read_csv(filepath_or_buffer=self.datasource, sep=sep)
         return df
     
     def __read_excel_file(self):
@@ -34,6 +34,8 @@ class Extracts:
             return self.__read_excel_file()
         elif self.extension in ['csv', 'tsv', 'txt']:
             return self.__read_csv_file()
+        elif self.extension == 'tsv':
+            return self.__read_csv_file(sep=' ')
         elif self.extension == 'json':
             return self.__read_json_file()
         elif self.extension == 'html':
