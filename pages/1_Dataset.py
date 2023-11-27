@@ -15,7 +15,7 @@ path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
 
 st.set_page_config(
-    page_title='Formula 1 Prediction | ETL',
+    page_title='Formula 1 | ETL',
     page_icon=logo,
     layout='wide'
 )
