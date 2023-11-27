@@ -48,7 +48,7 @@ with st.container():
                 </style>
             """, unsafe_allow_html=True)
         st.markdown('<h2 class="centered-header">Team</h2>', unsafe_allow_html=True)
-        team = pd.DataFrame({'Name':['Yassine EL GHALLALI', 'Rabia SLAOUI', 'Issam EL MEHDI']})
+        team = pd.DataFrame({'Name':['Yassine EL GHALLALI', 'Rabia SLAOUI', 'Issam EL MEHDI', 'Said SEHLALI']})
         fig = ff.create_table(team, height_constant=30, colorscale=[[0, '#4d004c'],[.5, '#f2e5ff'],[1, '#ffffff']])
         fig.update_layout(font=dict(size=20))
         st.plotly_chart(fig, use_container_width=True)
