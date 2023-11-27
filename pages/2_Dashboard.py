@@ -203,6 +203,9 @@ with st.container():
                             total_drivers_years = duckdb_connection.execute(query).df()
                             plot(total_drivers_years, x="Season", y="Driver", title='Total Driver')
                     with col_3:
+                        starting_position_affect_result_query = f"""
+                            
+                        """
                         df = px.data.gapminder()
                         scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp",  
                                         hover_name="country", log_x=True, size_max=60)
@@ -425,31 +428,33 @@ with st.container():
                         fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
                         st.plotly_chart(fig, use_container_width=True)
                     with col2:
-                        years = [1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-                         2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012]
-
+                        brand_performance_status_query = f"""
+                            SELECT 
+                                status as Status,
+                                COUNT(brand) AS Brand
+                            FROM
+                                data
+                            WHERE
+                                status IN ('Finished','Accident','Engine', 'Did not qualify', 'Collision', 'Gearbox', 'Spun off', 'Did not prequalify', 'Transmission')
+                                AND (DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year})
+                            GROUP BY status
+                            ORDER BY Brand ASC
+                        """
+                        brand_performance_status = duckdb_connection.execute(brand_performance_status_query).df()
                         fig = go.Figure()
-
-                        fig.add_trace(go.Bar(y=years,
-                                        x=[16, 13, 10, 11, 28, 37, 43, 55, 56, 88, 105, 156, 270,
-                                           299, 340, 403, 549, 499],
-                                        name='China',
-                                        marker_color='rgb(26, 118, 255)', orientation='h'
-                                        ))
-
+                        fig.add_trace(go.Bar(
+                            y=brand_performance_status['Status'],
+                            x=brand_performance_status['Brand'],
+                            orientation='h'
+                        ))
                         fig.update_layout(
-                            title='US Export of Plastic Scrap',
-                            yaxis_tickfont_size=14,
-                            xaxis=dict(
-                                title='USD (millions)',
-                                titlefont_size=16,
-                                tickfont_size=14,
-                            ),
-                            barmode='group',
-                            bargap=0.15, # gap between bars of adjacent location coordinates.
-                            bargroupgap=0.1, # gap between bars of the same location coordinate.
+                            title='Brands Performance Status',
+                            xaxis_title='Brand',
+                            yaxis_title='Status',
+                            title_x=0.2,
                             clickmode='event+select'
                         )
+                        fig.update_xaxes(tickformat=".2s")
                         st.plotly_chart(fig, use_container_width=True)
 
 
