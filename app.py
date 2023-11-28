@@ -12,6 +12,9 @@ warnings.filterwarnings('ignore')
 path_file = os.getcwd() + '/images/f1_logo.png'
 logo = Image.open(path_file)
 
+path_car = os.getcwd() + '/images/image.webp'
+car = Image.open(path_car)
+
 st.set_page_config(
     page_title='Formula 1 | Home',
     page_icon=logo,
@@ -30,11 +33,9 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
 with st.container():
-    col_img0, col_img1, col_img2, col_img3 = st.columns([1,4,4,1])
+    col_img0, col_img1, col_img2 = st.columns([1,8,1])
     with col_img1:
-        st.image('https://e0.365dm.com/23/02/768x432/skysports-mercedes-f1-2023_6058037.jpg?20230215093406')
-    with col_img2:
-        st.image('https://e0.365dm.com/23/02/768x432/skysports-f1-2023-car-launch_6058047.jpg?20230215093508')
+        st.image('https://www.cnet.com/a/img/resize/46b2fd5f0a17ea81e247b83132fff08df9cda0cb/hub/2021/07/15/56433bea-88e8-42bc-b9a7-4c158b3225b5/image.jpg?auto=webp&fit=crop&height=675&width=1200')
 
 with st.container():
     
