@@ -13,7 +13,7 @@ import plotly.figure_factory as ff
 import os
 import io
 import warnings
-from etl.factTable import factTable
+from etl.factTable import factTable,qualifying,results
 from utils.graphs import gauge, pie, plot, scatter
 
                 ##################################################################################################
@@ -204,11 +204,19 @@ with st.container():
                             plot(total_drivers_years, x="Season", y="Driver", title='Total Driver')
                     with col_3:
                         starting_position_affect_result_query = f"""
-                            
+                            SELECT
+                                q.position AS Position, 
+                                q.driverId,
+                                r.points AS Points
+                            FROM
+                                qualifying q
+                            JOIN
+                                results r ON q.raceId = r.raceId AND q.driverId = r.driverId
+                            GROUP BY q.position, q.raceId, q.driverId, r.points
                         """
+                        starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
                         df = px.data.gapminder()
-                        scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp",  
-                                        hover_name="country", log_x=True, size_max=60)
+                        scatter(starting_position_affect_result, x="Position", y="Points")
                 with st.container():
                     col1,col2,col3,col4 = st.columns([3,3,2,3])
                     with col1:
