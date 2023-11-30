@@ -201,7 +201,7 @@ with st.container():
                             LIMIT 1
                             """
                         top_speed = duckdb_connection.execute(query_top_speed).df()
-                        component("Top Speed Record",top_speed.loc[0,'MaxSpeedDriver'], top_speed.loc[0,'MaxSpeed'])
+                        component("Top Speed Record",top_speed.loc[0,'MaxSpeedDriver'] if top_speed['MaxSpeed'].notna().any() else '', top_speed.loc[0, 'MaxSpeed'] if top_speed['MaxSpeed'].notna().any() else '')
                 with st.container():
                     col1,col2,col_3 = st.columns([2,3,3])
                     with col1:
@@ -233,7 +233,7 @@ with st.container():
                         labels = driver_nationality['Nationality']
                         values = driver_nationality['Percentage']
                         # Use `hole` to create a donut-like pie chart
-                        pie(labels,values)
+                        pie(labels,values,'Where to Find Good Drivers')
                     with col2:
                             
                 ##################################################################################################
@@ -485,7 +485,7 @@ with st.container():
                             LIMIT 1
                         """
                         top_speed_brand = duckdb_connection.execute(top_speed_brand_query).df()
-                        component("Top Speed Record (Brand)",top_speed_brand.loc[0,'MaxSpeedBrand'], top_speed_brand.loc[0,'MaxSpeed'])
+                        component("Top Speed Record (Brand)",top_speed_brand.loc[0,'MaxSpeedBrand'] if top_speed_brand['MaxSpeed'].notna().any() else '', top_speed_brand.loc[0,'MaxSpeed'] if top_speed_brand['MaxSpeed'].notna().any() else '')
             
 
                 with st.container():
@@ -519,9 +519,10 @@ with st.container():
                         labels = brand_nationality['Nationality']
                         values = brand_nationality['Percentage']
                         # Use `hole` to create a donut-like pie chart
-                        fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7)])
-                        fig.update_layout(clickmode='event+select')
-                        st.plotly_chart(fig, use_container_width=True)
+                        pie(labels,values,'Where to Find Good Brand')
+                        #fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7)])
+                        #fig.update_layout(clickmode='event+select')
+                        #st.plotly_chart(fig, use_container_width=True)
                     with col2:
 
                 ##################################################################################################

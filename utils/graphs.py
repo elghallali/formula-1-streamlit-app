@@ -6,11 +6,11 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-def pie(labels,values):
+def pie(labels,values,title=''):
     
 
     # pull is given as a fraction of the pie radius
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7, pull=[0, 0, 0.1, 0])])
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values,title=title, hole=.7)])
     fig.update_layout(clickmode='event+select')
     st.plotly_chart(fig, use_container_width=True)
 
