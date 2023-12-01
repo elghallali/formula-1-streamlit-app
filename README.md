@@ -2,6 +2,17 @@
 
 ---
 
+<div>
+  <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" align="left"/>
+  <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" align="right"/>
+</div>
+<br><br>
+<br><br>
+<br><br>
+<div align="center">
+  <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
+</div>
+
 ## Description
 
 ---
@@ -25,8 +36,6 @@
 ### Importation of code source and run it in your operating system (Windows)
 
 #### Create a new folder in your PC and open it in your Command Prompt (cmd)  
-
-
 
 #### Clone code source from github repository
 
@@ -67,8 +76,6 @@ streamlit run app.py
 ---
 
 ## deployment
-
-#### Not yet 
 
 ```cmd
 docker run -p 8501:8501 elghallali/formula-1-streamlit-app
