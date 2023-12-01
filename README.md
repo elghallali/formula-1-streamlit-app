@@ -109,3 +109,9 @@ http://localhost:8501
 ```
 
 ---
+
+## Run The Application with Streamlit Share 
+
+```cmd
+https://formula-1-app.streamlit.app/
+```
