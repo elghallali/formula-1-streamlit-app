@@ -64,7 +64,7 @@ with st.container():
             """, unsafe_allow_html=True)
         st.markdown('<h2 class="centered-header">Proposed by</h2>', unsafe_allow_html=True)
         #st.header('Encadrant', divider='violet')
-        team = pd.DataFrame({'Prof':['Anass BENANI']})
+        team = pd.DataFrame({'Prof':['Anass BENNANI']})
         fig = ff.create_table(team, height_constant=30, colorscale=[[0, '#4d004c'],[.5, '#f2e5ff'],[1, '#ffffff']])
         fig.update_layout(font=dict(size=30))
         st.plotly_chart(fig, use_container_width=True)
