@@ -1,7 +1,3 @@
-# Formula 1 Streamlit application
-
----
-
 <div>
   <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" align="left"/>
   <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" align="right"/>
@@ -12,6 +8,33 @@
 <div align="center">
   <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
 </div>
+
+# Formula 1 Streamlit Application
+<div align="center">
+  <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/image.webp" title="Image" alt="Image" width="400"/>
+</div>
+
+<div>
+  <div align="left">
+
+### Team
+
+| Student Name   |
+|----------|
+| Yassine EL GHALLALI |
+| Rabia AISSAOUI SLAOUI |
+| Issam EL MEHDI |
+| Said SEHLALI |
+
+  </div>
+
+  <div align="right">
+
+### Proposed by: Anas BENNANI
+
+  </div>
+
+---
 
 ## Description
 
