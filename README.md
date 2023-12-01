@@ -28,7 +28,7 @@
 
   </div>
 
-  <div align="right">
+  <div align="center">
 
 ### Proposed by: Anas BENNANI
 
@@ -53,7 +53,6 @@
   <img src="https://github.com/devicons/devicon/blob/master/icons/pandas/pandas-original-wordmark.svg" title="Pandas" alt="Pandas" width="90" height="90"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/github/github-original-wordmark.svg" title="GitHub" alt="GitHub" width="90" height="90" /> &nbsp;
   <img src="https://github.com/elghallali/my-images/blob/master/streamlit-logo-primary-colormark-darktext.svg" title="Streamlit" alt="Streamlit" width="90" height="90">&nbsp;
-  <img src="https://github.com/devicons/devicon/blob/master/icons/sqlalchemy/sqlalchemy-original-wordmark.svg" title="sqlalchemy" alt="sqlalchemy" width="100" height="90">&nbsp;
 </div>
 
 ### Importation of code source and run it in your operating system (Windows)
