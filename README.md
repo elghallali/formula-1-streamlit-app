@@ -97,10 +97,15 @@ streamlit run app.py
 
 ---
 
-## deployment
+## Run The Application with Docker
 
+#### Run this code in the CMD (Command Prompt or PowerShell ...)
 ```cmd
-docker run -p 8501:8501 elghallali/formula-1-streamlit-app
+docker run -p 8501:8501 elghallali/formula-1-app
+```
+#### Run this code on the Browser
+```cmd
+http://localhost:8501
 ```
 
 ---
