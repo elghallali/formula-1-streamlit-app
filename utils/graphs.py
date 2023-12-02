@@ -24,8 +24,8 @@ def plot(df,x,y,title):
     st.plotly_chart(fig, use_container_width=True)
     
 
-def scatter(df,x,y,hover_name=None, size_max=20, log_x=False):
-    fig = px.scatter(df, x=x, y=y, hover_name=hover_name, log_x=log_x, size_max=size_max)
+def scatter(df,x,y,hover_name=None, size_max=20, log_x=False, marker_color=None):
+    fig = px.scatter(df, x=x, y=y, hover_name=hover_name, log_x=log_x, size_max=size_max,color=marker_color)
     fig.update_layout(clickmode='event+select')
     st.plotly_chart(fig, use_container_width=True)
 

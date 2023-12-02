@@ -1,6 +1,7 @@
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                                                                                              ##
+                ##                                                                                              ##
                 ##################################################################################################
 
 import streamlit as st
@@ -19,10 +20,12 @@ from utils.graphs import gauge, pie, plot, scatter
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                                                                                              ##
+                ##                                                                                              ##
                 ##################################################################################################
 warnings.filterwarnings('ignore')
 
                 ##################################################################################################
+                ##                                                                                              ##
                 ##                                                                                              ##
                 ##                                                                                              ##
                 ##################################################################################################
@@ -31,6 +34,7 @@ path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
 
                 ##################################################################################################
+                ##                                                                                              ##
                 ##                                                                                              ##
                 ##                                                                                              ##
                 ##################################################################################################
@@ -42,6 +46,7 @@ st.set_page_config(
 )
 
                 ##################################################################################################
+                ##                                                                                              ##
                 ##                                                                                              ##
                 ##                                                                                              ##
                 ##################################################################################################
@@ -60,6 +65,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                                                                                              ##
+                ##                                                                                              ##
                 ##################################################################################################
 
 data = factTable()
@@ -68,19 +74,41 @@ data = factTable()
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                                                                                              ##
+                ##                                                                                              ##
                 ##################################################################################################
 
 def component(title,name, value):
     st.markdown(f"""
         **{title}**
-        >
-        > {name}
-        >
-        > {value}
+
+        <div style="border-left: 5px solid red;">
+            <span style="font-size: 20px; padding-left: 15px;"><b>{name}</b></span>
+            <br>
+            <span style="font-size: 20px; padding-left: 20px;">{value}</span>
+            <br>
+        </div>
+        
                     """, unsafe_allow_html=True)
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
+def component2(title,value):
+    st.markdown(f"""
+        <div style="text-align: center;">
+        <span style="font-size: 50px; text-align: center;">{value}</span>
+        <br>
+        <span style="font-size: 20px; text-align: center; "><b>{title}</b></span>
+        <br>
+        </div>
+        """, unsafe_allow_html=True)
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                     Dashboard Page Body                                      ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -89,6 +117,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                               Creating Two Tabs Drivers & Teams                              ##
                 ##                                                                                              ##
                 ##################################################################################################
     tab_1, tab_2 = st.tabs(['Drivers', 'Teams'])
@@ -96,7 +125,7 @@ with st.container():
     with tab_1:
         duckdb_connection = duckdb.connect()
         with st.container():
-            col1,col2,col3 = st.columns([1,1,2])
+            col1,col2,col3 = st.columns([3,3,8])
             with col1:
                 
                 year_values = st.slider(
@@ -110,18 +139,19 @@ with st.container():
                     with col4:
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                         Total Driver                                         ##
                 ##                                                                                              ##
                 ##################################################################################################
                         total_driver = duckdb.sql(f"""
                             SELECT COUNT(DISTINCT driverName) AS driver FROM data
                             WHERE DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                         """).df()
-                        component("**Total Driver**", "<br>", total_driver.loc[0,'driver'])
+                        component2("Total Driver",total_driver.loc[0,'driver'])
                     with col5:
-                        # Validate and use the selected years
                         
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                      Total Races (Driver)                                    ##
                 ##                                                                                              ##
                 ##################################################################################################
                             total_races = f"""
@@ -137,13 +167,14 @@ with st.container():
                             result_df = duckdb_connection.execute(total_races).df()
                             # Calculate the total GP count by summing the counts for each year
                             total_gp_count = result_df['total_GP'].sum()
-                            component("**Total Races**", "<br>", total_gp_count)
+                            component2("Total Races", total_gp_count)
                 with col3:
-                    col6,col7,col8 = st.columns([2,3,2])
+                    col6,col7,col8 = st.columns(3)
                     with col6:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                      Most Winning Racer                                      ##
                 ##                                                                                              ##
                 ##################################################################################################
                         query_most_winner = f"""
@@ -165,6 +196,7 @@ with st.container():
                 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Most Participating Racer                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
                         query_most_participating = f"""
@@ -186,6 +218,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Top Speed Record (Driver)                                  ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -203,11 +236,13 @@ with st.container():
                         top_speed = duckdb_connection.execute(query_top_speed).df()
                         component("Top Speed Record",top_speed.loc[0,'MaxSpeedDriver'] if top_speed['MaxSpeed'].notna().any() else '', top_speed.loc[0, 'MaxSpeed'] if top_speed['MaxSpeed'].notna().any() else '')
                 with st.container():
-                    col1,col2,col_3 = st.columns([2,3,3])
+                    st.markdown("<br><br>",unsafe_allow_html=True)
+                    col1,col2,col_3 = st.columns(3)
                     with col1:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                  Where to Find Good Drivers                                  ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -238,6 +273,7 @@ with st.container():
                             
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                         Total Driver                                         ##
                 ##                                                                                              ##
                 ##################################################################################################     
 
@@ -260,13 +296,14 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                            Starting Position Affect Result (Driver)                          ##
                 ##                                                                                              ##
                 ##################################################################################################
 
                         starting_position_affect_result_query = f"""
                             SELECT
-                                q.position AS Position, 
-                                q.driverId,
+                                q.position AS 'Starting Position', 
+                                q.driverId AS DriverId,
                                 r.points AS Points
                             FROM
                                 qualifying q
@@ -275,14 +312,15 @@ with st.container():
                             GROUP BY q.position, q.raceId, q.driverId, r.points
                         """
                         starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
-                        df = px.data.gapminder()
-                        scatter(starting_position_affect_result, x="Position", y="Points")
+                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='DriverId')
                 with st.container():
+                    st.markdown("<br><br>",unsafe_allow_html=True)
                     col1,col2,col3,col4 = st.columns([3,3,2,3])
                     with col1:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                          Top Racers                                          ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -302,12 +340,15 @@ with st.container():
                         ).df()
 
                         fig = ff.create_table(top_racers_with_points.head(15), height_constant=30)
+                        fig.layout.margin.update({'t':75, 'l':50})
+                        fig.layout.update({'title': 'Top Racers'})
                         st.plotly_chart(fig, use_container_width=True)
                     with col2:
-                        ##################################################################################################
-                        ##                                                                                              ##
-                        ##                                                                                              ##
-                        ##################################################################################################
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                            Most Reason Driver Don't Finished Race                            ##
+                ##                                                                                              ##
+                ##################################################################################################
                         reason_driver_not_finish_races = duckdb.sql(f"""
                             SELECT 
                                 status as Status,
@@ -339,6 +380,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Finished Race (%) Driver                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
                         finished_race = duckdb.sql(f"""
@@ -354,6 +396,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                      Accident (%) Driver                                     ##
                 ##                                                                                              ##
                 ##################################################################################################
                         accident_race = duckdb.sql(f"""
@@ -367,19 +410,28 @@ with st.container():
                         """).df()
                         gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
                     with col4:
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                             How Pit Stop Duration Affect Result                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+
                         df = px.data.tips()
                         scatter(df, x="total_bill", y="tip")
 
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                          Tab 2: Is for teams                                                 ##
+                ##                                                                                              ##
                 ##################################################################################################
     with tab_2:
         with st.container():
-            col1,col2,col3 = st.columns([1,1,2])
+            col1,col2,col3 = st.columns([3,3,8])
             with col1:
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                        Teams Slider                                          ##
                 ##                                                                                              ##
                 ##################################################################################################
                 year_values_brand = st.slider(
@@ -395,6 +447,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                         Total Brands                                         ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -402,11 +455,12 @@ with st.container():
                             SELECT COUNT(DISTINCT brand) AS Brand From data
                             WHERE DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year}
                         """).df()
-                        component("Total Brands", '<br>', total_brands.loc[0,'Brand'])
+                        component2("Total Brands", total_brands.loc[0,'Brand'])
                     with col5:
                     
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                          Total Races                                         ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -423,13 +477,14 @@ with st.container():
                             result_df = duckdb_connection.execute(total_races).df()
                             # Calculate the total GP count by summing the counts for each year
                             total_gp_count = result_df['total_GP'].sum()
-                            component("**Total Races**", "<br>", total_gp_count)
+                            component2("Total Races", total_gp_count)
                 with col3:
                     col6,col7,col8 = st.columns(3)
                     with col6:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                      Most Winning Brand                                      ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -450,6 +505,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Most Participating Brand                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -470,6 +526,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                       Top Speed Brand                                        ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -489,11 +546,13 @@ with st.container():
             
 
                 with st.container():
-                    col1,col2,col_3 = st.columns([2,3,3])
+                    st.markdown("<br><br>",unsafe_allow_html=True)
+                    col1,col2,col_3 = st.columns(3)
                     with col1:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Where to Find Good Brand                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -518,19 +577,16 @@ with st.container():
                         brand_nationality = duckdb_connection.execute(brand_nationality_query).df()
                         labels = brand_nationality['Nationality']
                         values = brand_nationality['Percentage']
-                        # Use `hole` to create a donut-like pie chart
                         pie(labels,values,'Where to Find Good Brand')
-                        #fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7)])
-                        #fig.update_layout(clickmode='event+select')
-                        #st.plotly_chart(fig, use_container_width=True)
                     with col2:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Total Driver (Team Tabs)                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
                         # Using string formatting (be cautious about SQL injection)
-                        query2 = f"""
+                        total_drivers_years_team_query = f"""
                             SELECT
                                 COUNT(DISTINCT brand) AS Brand,
                                 DATE_PART('year', year) as Season
@@ -541,26 +597,37 @@ with st.container():
                             ORDER BY DATE_PART('year', year)
                         """
                         # Execute the query
-                        total_drivers_years_team = duckdb_connection.execute(query2).df()
+                        total_drivers_years_team = duckdb_connection.execute(total_drivers_years_team_query).df()
                         plot(total_drivers_years_team, x="Season", y="Brand", title='Total Brand')
                     with col_3:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                          Starting Position Affect Result for Brands                          ##
                 ##                                                                                              ##
                 ##################################################################################################
 
-                        df = px.data.gapminder()
-                        fig = px.scatter(df.query("year==2007"), x="gdpPercap", y="lifeExp", size="pop", color="continent",
-                                        hover_name="country", log_x=True, size_max=60)
-                        fig.update_layout(clickmode='event+select')
-                        st.plotly_chart(fig, use_container_width=True)
+                        starting_position_affect_result_query = f"""
+                            SELECT
+                                q.position AS 'Starting Position', 
+                                q.constructorId AS ConstructorId,
+                                r.points AS Points
+                            FROM
+                                qualifying q
+                            JOIN
+                                results r ON q.raceId = r.raceId AND q.constructorId = r.constructorId
+                            GROUP BY q.position, q.raceId, q.constructorId, r.points
+                        """
+                        starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
+                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
                 with st.container():
+                    st.markdown("<br><br>",unsafe_allow_html=True)
                     col1,col2,col3,col4 = st.columns([3,3,2,3])
                     with col1:
                 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                          Top Brands                                          ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -580,11 +647,14 @@ with st.container():
                         ).df()
 
                         fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
+                        fig.layout.margin.update({'t':75, 'l':50})
+                        fig.layout.update({'title': 'Top Brands'})
                         st.plotly_chart(fig, use_container_width=True)
                     with col2:
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                  Brand Performance Status                                    ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -620,6 +690,7 @@ with st.container():
             
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                     Finished Race (%) Brand                                  ##
                 ##                                                                                              ##
                 ##################################################################################################
                         finished_race = duckdb.sql(f"""
@@ -635,6 +706,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                       Accident (%) Brand                                     ##
                 ##                                                                                              ##
                 ##################################################################################################
 
@@ -652,6 +724,7 @@ with st.container():
 
                 ##################################################################################################
                 ##                                                                                              ##
+                ##                                   Favorite Circuit Location                                  ##
                 ##                                                                                              ##
                 ##################################################################################################
                         fig = px.treemap(
