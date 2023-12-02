@@ -234,7 +234,7 @@ with st.container():
                             LIMIT 1
                             """
                         top_speed = duckdb_connection.execute(query_top_speed).df()
-                        component("Top Speed Record",top_speed.loc[0,'MaxSpeedDriver'] if top_speed['MaxSpeed'].notna().any() else '', top_speed.loc[0, 'MaxSpeed'] if top_speed['MaxSpeed'].notna().any() else '')
+                        component("Top Speed Record",top_speed.loc[0,'MaxSpeedDriver'] if top_speed['MaxSpeed'].notna().any() else '', str(top_speed.loc[0, 'MaxSpeed']) + ' Km/h' if top_speed['MaxSpeed'].notna().any() else '')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
                     col1,col2,col_3 = st.columns(3)
@@ -542,7 +542,7 @@ with st.container():
                             LIMIT 1
                         """
                         top_speed_brand = duckdb_connection.execute(top_speed_brand_query).df()
-                        component("Top Speed Record (Brand)",top_speed_brand.loc[0,'MaxSpeedBrand'] if top_speed_brand['MaxSpeed'].notna().any() else '', top_speed_brand.loc[0,'MaxSpeed'] if top_speed_brand['MaxSpeed'].notna().any() else '')
+                        component("Top Speed Record (Brand)",top_speed_brand.loc[0,'MaxSpeedBrand'] if top_speed_brand['MaxSpeed'].notna().any() else '', str(top_speed_brand.loc[0,'MaxSpeed']) + ' Km/h' if top_speed_brand['MaxSpeed'].notna().any() else '')
             
 
                 with st.container():

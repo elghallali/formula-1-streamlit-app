@@ -53,6 +53,7 @@
   <img src="https://github.com/devicons/devicon/blob/master/icons/pandas/pandas-original-wordmark.svg" title="Pandas" alt="Pandas" width="90" height="90"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/github/github-original-wordmark.svg" title="GitHub" alt="GitHub" width="90" height="90" /> &nbsp;
   <img src="https://github.com/elghallali/my-images/blob/master/streamlit-logo-primary-colormark-darktext.svg" title="Streamlit" alt="Streamlit" width="90" height="90">&nbsp;
+  <img src="https://images.prismic.io/plotly-marketing-website-2/69e12d6a-fb65-4b6e-8423-9465a29c6028_plotly-logo-lg.png?auto=compress%2Cformat&fit=max&w=128" title="Plotly" alt="Plotly" width="90" height="90">&nbsp;
 </div>
 
 ### Importation of code source and run it in your operating system (Windows)
