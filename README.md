@@ -53,7 +53,9 @@
   <img src="https://github.com/devicons/devicon/blob/master/icons/pandas/pandas-original-wordmark.svg" title="Pandas" alt="Pandas" width="90" height="90"/>&nbsp;
   <img src="https://github.com/devicons/devicon/blob/master/icons/github/github-original-wordmark.svg" title="GitHub" alt="GitHub" width="90" height="90" /> &nbsp;
   <img src="https://github.com/elghallali/my-images/blob/master/streamlit-logo-primary-colormark-darktext.svg" title="Streamlit" alt="Streamlit" width="90" height="90">&nbsp;
-  <img src="https://images.prismic.io/plotly-marketing-website-2/69e12d6a-fb65-4b6e-8423-9465a29c6028_plotly-logo-lg.png?auto=compress%2Cformat&fit=max&w=128" title="Plotly" alt="Plotly" width="90" height="90">&nbsp;
+  <img src="https://store-images.s-microsoft.com/image/apps.36868.bfb0e2ee-be9e-4c73-807f-e0a7b805b1be.712aff5d-5800-47e0-97be-58d17ada3fb8.a46845e6-ce94-44cf-892b-54637c6fcf06" title="Plotly" alt="Plotly" width="90" height="90">&nbsp;
+  <img src="https://github.com/elghallali/my-images/blob/master/GitHub%20Actions.svg" title="GitHub Actions" alt="GitHub Actions" width="90" height="90">&nbsp;
+  <img src="https://duckdb.org/images/logo-dl/DuckDB_Logo-stacked.svg" title="DuckDB" alt="DuckDB" width="90" height="90">&nbsp;
 </div>
 
 ### Importation of code source and run it in your operating system (Windows)
