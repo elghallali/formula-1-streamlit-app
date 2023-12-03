@@ -142,10 +142,11 @@ with st.container():
                 ##                                         Total Driver                                         ##
                 ##                                                                                              ##
                 ##################################################################################################
-                        total_driver = duckdb.sql(f"""
+                        total_driver_query = f"""
                             SELECT COUNT(DISTINCT driverName) AS driver FROM data
                             WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
-                        """).df()
+                        """
+                        total_driver = duckdb_connection.execute(total_driver_query).df()
                         component2("Total Driver",total_driver.loc[0,'driver'])
                     with col5:
                         
@@ -324,7 +325,7 @@ with st.container():
                 ##                                                                                              ##
                 ##################################################################################################
 
-                        top_racers_with_points = duckdb.sql(f"""
+                        top_racers_with_points_query = f"""
                             SELECT
                                 driverName AS Name,
                                 driverNationality AS Nationality,
@@ -336,9 +337,8 @@ with st.container():
                                 driverName, driverNationality
                             ORDER BY
                                 Points DESC
-                        """
-                        ).df()
-
+                            """
+                        top_racers_with_points = duckdb_connection.execute(top_racers_with_points_query).df()
                         fig = ff.create_table(top_racers_with_points.head(15), height_constant=30)
                         fig.layout.margin.update({'t':75, 'l':50})
                         fig.layout.update({'title': 'Top Racers'})
@@ -349,7 +349,7 @@ with st.container():
                 ##                            Most Reason Driver Don't Finished Race                            ##
                 ##                                                                                              ##
                 ##################################################################################################
-                        reason_driver_not_finish_races = duckdb.sql(f"""
+                        reason_driver_not_finish_races_query = f"""
                             SELECT 
                                 status as Status,
                                 COUNT(driverName) AS Driver
@@ -360,7 +360,8 @@ with st.container():
                                 AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
                             GROUP BY status
                             ORDER BY Driver ASC
-                        """).df()
+                            """
+                        reason_driver_not_finish_races = duckdb_connection.execute(reason_driver_not_finish_races_query).df()
                         fig = go.Figure()
                         fig.add_trace(go.Bar(
                             y=reason_driver_not_finish_races['Status'],
@@ -383,7 +384,7 @@ with st.container():
                 ##                                   Finished Race (%) Driver                                   ##
                 ##                                                                                              ##
                 ##################################################################################################
-                        finished_race = duckdb.sql(f"""
+                        finished_race_query = f"""
                             SELECT 
                                 (SELECT COUNT(driverName) FROM data) AS All_Drivers,
                                 (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data)) AS Percentage_Finished
@@ -391,7 +392,8 @@ with st.container():
                                 data
                             WHERE status IN ('Finished') 
                                 AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
-                        """).df()
+                        """
+                        finished_race = duckdb_connection.execute(finished_race_query).df()
                         gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
 
                 ##################################################################################################
@@ -399,7 +401,7 @@ with st.container():
                 ##                                      Accident (%) Driver                                     ##
                 ##                                                                                              ##
                 ##################################################################################################
-                        accident_race = duckdb.sql(f"""
+                        accident_race_query = f"""
                             SELECT 
                                 (SELECT COUNT(driverName) FROM data) AS All_Drivers,
                                 (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data)) AS Percentage_Accident
@@ -407,7 +409,8 @@ with st.container():
                                 data
                             WHERE status IN ('Accident')
                                 AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
-                        """).df()
+                        """
+                        accident_race = duckdb_connection.execute(accident_race_query).df()
                         gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
                     with col4:
 
@@ -622,7 +625,7 @@ with st.container():
                         scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1,col2,col3,col4 = st.columns([3,3,2,3])
+                    col1,col2,col3 = st.columns([3,3,4])
                     with col1:
                 
                 ##################################################################################################
@@ -631,7 +634,7 @@ with st.container():
                 ##                                                                                              ##
                 ##################################################################################################
 
-                        top_brands_with_points = duckdb.sql(f"""
+                        top_brands_with_points_query = f"""
                             SELECT
                                 brand AS Name,
                                 brandNationality AS Nationality,
@@ -644,13 +647,51 @@ with st.container():
                             ORDER BY
                                 Points DESC
                         """
-                        ).df()
-
+                        top_brands_with_points = duckdb_connection.execute(top_brands_with_points_query).df()
                         fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
                         fig.layout.margin.update({'t':75, 'l':50})
                         fig.layout.update({'title': 'Top Brands'})
                         st.plotly_chart(fig, use_container_width=True)
+
                     with col2:
+            
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                     Finished Race (%) Brand                                  ##
+                ##                                                                                              ##
+                ##################################################################################################
+                        finished_race_query = f"""
+                            SELECT 
+                                (SELECT COUNT(brand) FROM data) AS All_Brands,
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
+                            FROM
+                                data
+                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+
+                        """
+                        finished_race = duckdb_connection.execute(finished_race_query).df()
+                        gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                       Accident (%) Brand                                     ##
+                ##                                                                                              ##
+                ##################################################################################################
+
+                        accident_race_query = f"""
+                            SELECT 
+                                (SELECT COUNT(brand) FROM data) AS All_Brands,
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
+                            FROM
+                                data
+                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+
+                        """
+                        accident_race = duckdb_connection.execute(accident_race_query).df()
+                        gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
+                    
+
+                    with col3:
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -686,54 +727,5 @@ with st.container():
                         )
                         fig.update_xaxes(tickformat=".2s")
                         st.plotly_chart(fig, use_container_width=True)
-                    with col3:
-            
-                ##################################################################################################
-                ##                                                                                              ##
-                ##                                     Finished Race (%) Brand                                  ##
-                ##                                                                                              ##
-                ##################################################################################################
-                        finished_race = duckdb.sql(f"""
-                            SELECT 
-                                (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
-                            FROM
-                                data
-                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
-
-                        """).df()
-                        gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
-
-                ##################################################################################################
-                ##                                                                                              ##
-                ##                                       Accident (%) Brand                                     ##
-                ##                                                                                              ##
-                ##################################################################################################
-
-                        accident_race = duckdb.sql(f"""
-                            SELECT 
-                                (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
-                            FROM
-                                data
-                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
-
-                        """).df()
-                        gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
-                    with col4:
-
-                ##################################################################################################
-                ##                                                                                              ##
-                ##                                   Favorite Circuit Location                                  ##
-                ##                                                                                              ##
-                ##################################################################################################
-                        fig = px.treemap(
-                            names = ["Eve","Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
-                            parents = ["", "Eve", "Eve", "Seth", "Seth", "Eve", "Eve", "Awan", "Eve"]
-                        )
-                        fig.update_traces(root_color="lightgrey")
-                        fig.update_layout(margin = dict(t=50, l=25, r=25, b=25),clickmode='event+select')
-                        st.plotly_chart(fig, use_container_width=True)
-
-
+                    
 
