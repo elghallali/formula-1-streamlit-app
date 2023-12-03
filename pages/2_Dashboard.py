@@ -550,8 +550,8 @@ with st.container():
 
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1_container2,col2_container2,col3_container2 = st.columns(3)
-                    with col1_container2:
+                    col1,col2,col_3 = st.columns(3)
+                    with col1:
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -581,7 +581,7 @@ with st.container():
                         labels = brand_nationality['Nationality']
                         values = brand_nationality['Percentage']
                         pie(labels,values,'Where to Find Good Brand')
-                    with col2_container2:
+                    with col2:
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -602,7 +602,7 @@ with st.container():
                         # Execute the query
                         total_drivers_years_team = duckdb_connection.execute(total_drivers_years_team_query).df()
                         plot(total_drivers_years_team, x="Season", y="Brand", title='Total Brand')
-                    with col3_container2:
+                    with col_3:
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -625,7 +625,7 @@ with st.container():
                         scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1_container3,col2_container3,col3_container3 = st.columns(3)
+                    col1_container3,col2_container3,col3_container3,col4_container3 = st.columns([4,3,4,1])
                     with col1_container3:
                 
                 ##################################################################################################
