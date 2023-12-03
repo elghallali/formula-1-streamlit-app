@@ -2,20 +2,22 @@ import pandas as pd
 import numpy as np
 import os
 
+from etl.extracts import Extracts
 
-circuits = pd.read_csv(os.getcwd() +'/data/circuits.csv')
-laptimes = pd.read_csv(os.getcwd() +'/data/lap_times.csv')
-pitstops = pd.read_csv(os.getcwd() +'/data/pit_stops.csv')
-seasons = pd.read_csv(os.getcwd() +'/data/seasons.csv' , parse_dates = ['year'])
-status = pd.read_csv(os.getcwd() +'/data/status.csv')
-constructor_standings = pd.read_csv(os.getcwd() +'/data/constructor_standings.csv')
-constructors = pd.read_csv(os.getcwd() +'/data/constructors.csv')
-driver_standings = pd.read_csv(os.getcwd() +'/data/driver_standings.csv')
-drivers = pd.read_csv(os.getcwd() +'/data/drivers.csv')
-races = pd.read_csv(os.getcwd() +'/data/races.csv', parse_dates = ['year'])
-constructor_results = pd.read_csv(os.getcwd() +'/data/constructor_results.csv')
-results = pd.read_csv(os.getcwd() +'/data/results.csv')
-qualifying = pd.read_csv(os.getcwd() +'/data/qualifying.csv')
+
+circuits = Extracts(os.getcwd() +'/data/circuits.csv','csv').load_data()
+laptimes = Extracts(os.getcwd() +'/data/lap_times.csv','csv').load_data()
+pitstops = Extracts(os.getcwd() +'/data/pit_stops.csv','csv').load_data()
+seasons = Extracts(os.getcwd() +'/data/seasons.csv' ,'csv').load_data()
+status = Extracts(os.getcwd() +'/data/status.csv','csv').load_data()
+constructor_standings = Extracts(os.getcwd() +'/data/constructor_standings.csv','csv').load_data()
+constructors = Extracts(os.getcwd() +'/data/constructors.csv','csv').load_data()
+driver_standings = Extracts(os.getcwd() +'/data/driver_standings.csv','csv').load_data()
+drivers = Extracts(os.getcwd() +'/data/drivers.csv','csv').load_data()
+races = Extracts(os.getcwd() +'/data/races.csv','csv').load_data()
+constructor_results = Extracts(os.getcwd() +'/data/constructor_results.csv','csv').load_data()
+results = Extracts(os.getcwd() +'/data/results.csv','csv').load_data()
+qualifying = Extracts(os.getcwd() +'/data/qualifying.csv','csv').load_data()
 
 #############################################################################
 ###

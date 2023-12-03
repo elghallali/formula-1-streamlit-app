@@ -14,7 +14,7 @@ import plotly.figure_factory as ff
 import os
 import io
 import warnings
-from etl.factTable import factTable,qualifying,results
+from etl.data import factTable,qualifying,results
 from utils.graphs import gauge, pie, plot, scatter
 
                 ##################################################################################################
@@ -144,7 +144,7 @@ with st.container():
                 ##################################################################################################
                         total_driver = duckdb.sql(f"""
                             SELECT COUNT(DISTINCT driverName) AS driver FROM data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                         """).df()
                         component2("Total Driver",total_driver.loc[0,'driver'])
                     with col5:
@@ -156,13 +156,13 @@ with st.container():
                 ##################################################################################################
                             total_races = f"""
                                 SELECT
-                                    DATE_PART('year', year) AS year,
+                                    year,
                                     COUNT(DISTINCT GPName) AS total_GP
                                 FROM
                                     data
                                 WHERE
-                                    DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
-                                GROUP BY DATE_PART('year', year)
+                                    year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                                GROUP BY  year
                             """
                             result_df = duckdb_connection.execute(total_races).df()
                             # Calculate the total GP count by summing the counts for each year
@@ -184,7 +184,7 @@ with st.container():
                             FROM
                                 data
                             WHERE
-                                positionOrder = 1 AND ( DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                positionOrder = 1 AND ( year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
                             GROUP BY Winner
                             ORDER BY COUNT(positionOrder) DESC
                         """
@@ -205,7 +205,7 @@ with st.container():
                                 driverName AS MostParticipating
                             FROM
                                 data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                             GROUP BY driverName
                             ORDER BY MaxParticipation DESC
                             LIMIT 1
@@ -228,7 +228,7 @@ with st.container():
                                 driverName AS MaxSpeedDriver
                             FROM 
                                 data
-                            WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                             GROUP BY driverName
                             ORDER BY MaxSpeed DESC
                             LIMIT 1
@@ -256,9 +256,9 @@ with st.container():
                                 data,
                                 (SELECT COUNT(DISTINCT driverName) AS Total 
                                 FROM data 
-                                WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
 
-                            WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                             GROUP BY driverNationality, Total
                             ORDER BY Percentage DESC
                             LIMIT 4
@@ -281,13 +281,13 @@ with st.container():
                             query = f"""
                                 SELECT
                                     COUNT(DISTINCT driverName) AS Driver,
-                                    DATE_PART('year', year) as Season
+                                    year as Season
                                 FROM
                                     data
 
                                 WHERE Season BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
-                                GROUP BY DATE_PART('year', year)
-                                ORDER BY DATE_PART('year', year)
+                                GROUP BY year
+                                ORDER BY year
                             """
                             # Execute the query
                             total_drivers_years = duckdb_connection.execute(query).df()
@@ -331,7 +331,7 @@ with st.container():
                                 SUM(points) AS Points
                             FROM
                                 data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
                             GROUP BY
                                 driverName, driverNationality
                             ORDER BY
@@ -357,7 +357,7 @@ with st.container():
                                 data
                             WHERE
                                 status IN ('Accident','Engine', 'Did not qualify', 'Collision', 'Gearbox', 'Spun off', 'Suspension', 'Did not prequalify', 'Transmission', 'Electrical')
-                                AND (DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
                             GROUP BY status
                             ORDER BY Driver ASC
                         """).df()
@@ -390,7 +390,7 @@ with st.container():
                             FROM
                                 data
                             WHERE status IN ('Finished') 
-                                AND (DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
+                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
                         """).df()
                         gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
 
@@ -406,7 +406,7 @@ with st.container():
                             FROM
                                 data
                             WHERE status IN ('Accident')
-                                AND (DATE_PART('year', year) BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
+                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
                         """).df()
                         gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
                     with col4:
@@ -453,7 +453,7 @@ with st.container():
 
                         total_brands = duckdb.sql(f"""
                             SELECT COUNT(DISTINCT brand) AS Brand From data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
                         """).df()
                         component2("Total Brands", total_brands.loc[0,'Brand'])
                     with col5:
@@ -466,13 +466,13 @@ with st.container():
 
                             total_races = f"""
                                 SELECT
-                                    DATE_PART('year', year) AS year,
+                                    year,
                                     COUNT(DISTINCT GPName) AS total_GP
                                 FROM
                                     data
                                 WHERE
-                                    DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year}
-                                GROUP BY DATE_PART('year', year)
+                                    year BETWEEN {selected_start_year} AND {selected_end_year}
+                                GROUP BY year
                             """
                             result_df = duckdb_connection.execute(total_races).df()
                             # Calculate the total GP count by summing the counts for each year
@@ -495,7 +495,7 @@ with st.container():
                             FROM
                                 data
                             WHERE
-                                positionOrder = 1 AND ( DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year})
+                                positionOrder = 1 AND ( year BETWEEN {selected_start_year} AND {selected_end_year})
                             GROUP BY Brand
                             ORDER BY COUNT(positionOrder) DESC
                         """
@@ -515,7 +515,7 @@ with st.container():
                                 brand AS MostParticipating
                             FROM
                                 data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
                             GROUP BY brand
                             ORDER BY MaxParticipation DESC
                             LIMIT 1
@@ -536,7 +536,7 @@ with st.container():
                                 brand AS MaxSpeedBrand
                             FROM 
                                 data
-                            WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
                             GROUP BY brand
                             ORDER BY MaxSpeed DESC
                             LIMIT 1
@@ -566,9 +566,9 @@ with st.container():
                                 data,
                                 (SELECT COUNT(DISTINCT brand) AS Total 
                                 FROM data 
-                                WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year} AND {selected_end_year})
+                                WHERE year BETWEEN {selected_start_year} AND {selected_end_year})
 
-                            WHERE EXTRACT(year FROM year) BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
                             GROUP BY brandNationality, Total
                             ORDER BY Percentage DESC
                             LIMIT 4
@@ -589,12 +589,12 @@ with st.container():
                         total_drivers_years_team_query = f"""
                             SELECT
                                 COUNT(DISTINCT brand) AS Brand,
-                                DATE_PART('year', year) as Season
+                                year as Season
                             FROM
                                 data
                             WHERE Season BETWEEN {selected_start_year} AND {selected_end_year}
-                            GROUP BY DATE_PART('year', year)
-                            ORDER BY DATE_PART('year', year)
+                            GROUP BY year
+                            ORDER BY year
                         """
                         # Execute the query
                         total_drivers_years_team = duckdb_connection.execute(total_drivers_years_team_query).df()
@@ -638,7 +638,7 @@ with st.container():
                                 SUM(points) AS Points
                             FROM
                                 data
-                            WHERE DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
                             GROUP BY
                                 brand, brandNationality
                             ORDER BY
@@ -666,7 +666,7 @@ with st.container():
                                 data
                             WHERE
                                 status IN ('Finished','Accident','Engine', 'Did not qualify', 'Collision', 'Gearbox', 'Spun off', 'Did not prequalify', 'Transmission')
-                                AND (DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year})
+                                AND (year BETWEEN {selected_start_year} AND {selected_end_year})
                             GROUP BY status
                             ORDER BY Brand ASC
                         """
@@ -699,7 +699,7 @@ with st.container():
                                 (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
                             FROM
                                 data
-                            WHERE status IN ('Finished') AND (DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year});
+                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
 
                         """).df()
                         gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
@@ -716,7 +716,7 @@ with st.container():
                                 (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
                             FROM
                                 data
-                            WHERE status IN ('Accident') AND (DATE_PART('year', year) BETWEEN {selected_start_year} AND {selected_end_year});
+                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
 
                         """).df()
                         gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
