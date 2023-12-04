@@ -625,7 +625,7 @@ with st.container():
                         scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1_container3,col2_container3,col3_container3,col4_container3 = st.columns([4,3,4,1])
+                    col1_container3,col2_container3,col3_container3 = st.columns([4,4,4])
                     with col1_container3:
                 
                 ##################################################################################################
@@ -670,7 +670,7 @@ with st.container():
 
                         """
                         finished_race_brand = duckdb_connection.execute(finished_race_brand_query).df()
-                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)")
+                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)",height=250)
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -688,7 +688,7 @@ with st.container():
 
                         """
                         accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
-                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)")
+                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)",height=250)
                     
 
                     with col3_container3:
