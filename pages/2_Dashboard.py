@@ -730,3 +730,9 @@ with st.container():
                         """
                         accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
                         gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)")
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
