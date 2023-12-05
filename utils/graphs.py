@@ -29,7 +29,7 @@ def scatter(df,x,y,hover_name=None, size_max=20, log_x=False, marker_color=None)
     fig.update_layout(clickmode='event+select')
     st.plotly_chart(fig, use_container_width=True)
 
-def gauge(value,suffix,title,font= {'color': "white", 'family': "Arial"}, height=200, margin=dict(l=10, r=10, t=50, b=10, pad=8)):
+def gauge(value,suffix,title,font= {'color': "white", 'family': "Arial"}, height=190, margin=dict(l=10, r=10, t=50, b=10, pad=8)):
     fig = go.Figure(go.Indicator(
                     mode = "gauge+number",
                     value = value,

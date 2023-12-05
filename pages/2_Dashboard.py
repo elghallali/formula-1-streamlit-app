@@ -316,7 +316,7 @@ with st.container():
                         scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='DriverId')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1,col2,col3,col4 = st.columns([3,3,2,3])
+                    col1,col2,col3,col4 = st.columns(4)
                     with col1:
 
                 ##################################################################################################
@@ -340,7 +340,7 @@ with st.container():
                             """
                         top_racers_with_points = duckdb_connection.execute(top_racers_with_points_query).df()
                         fig = ff.create_table(top_racers_with_points.head(15), height_constant=30)
-                        fig.layout.margin.update({'t':75, 'l':50})
+                        fig.layout.margin.update({'t':75})
                         fig.layout.update({'title': 'Top Racers'})
                         st.plotly_chart(fig, use_container_width=True)
                     with col2:
@@ -625,8 +625,8 @@ with st.container():
                         scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1_container3,col2_container3,col3_container3 = st.columns([4,4,4])
-                    with col1_container3:
+                    col1, col2, col3,  col4 = st.columns(4)
+                    with col1:
                 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -649,11 +649,11 @@ with st.container():
                         """
                         top_brands_with_points = duckdb_connection.execute(top_brands_with_points_query).df()
                         fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
-                        fig.layout.margin.update({'t':75, 'l':50})
+                        fig.layout.margin.update({'t':75})
                         fig.layout.update({'title': 'Top Brands'})
                         st.plotly_chart(fig, use_container_width=True)
 
-                    with col2_container3:
+                    with col2:
             
                 ##################################################################################################
                 ##                                                                                              ##
@@ -670,7 +670,7 @@ with st.container():
 
                         """
                         finished_race_brand = duckdb_connection.execute(finished_race_brand_query).df()
-                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)",height=250)
+                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)")
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -688,10 +688,10 @@ with st.container():
 
                         """
                         accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
-                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)",height=250)
+                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)")
                     
 
-                    with col3_container3:
+                    with col3:
 
                 ##################################################################################################
                 ##                                                                                              ##
