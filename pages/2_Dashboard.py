@@ -653,45 +653,10 @@ with st.container():
                         fig.layout.update({'title': 'Top Brands'})
                         st.plotly_chart(fig, use_container_width=True)
 
-                    with col2:
-            
-                ##################################################################################################
-                ##                                                                                              ##
-                ##                                     Finished Race (%) Brand                                  ##
-                ##                                                                                              ##
-                ##################################################################################################
-                        finished_race_brand_query = f"""
-                            SELECT 
-                                (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
-                            FROM
-                                data
-                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
-
-                        """
-                        finished_race_brand = duckdb_connection.execute(finished_race_brand_query).df()
-                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)")
-
-                ##################################################################################################
-                ##                                                                                              ##
-                ##                                       Accident (%) Brand                                     ##
-                ##                                                                                              ##
-                ##################################################################################################
-
-                        accident_race_brand_query = f"""
-                            SELECT 
-                                (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
-                            FROM
-                                data
-                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
-
-                        """
-                        accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
-                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)")
+                    
                     
 
-                    with col3:
+                    with col2:
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -729,3 +694,39 @@ with st.container():
                         st.plotly_chart(fig, use_container_width=True)
                     
 
+                    with col3:
+            
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                     Finished Race (%) Brand                                  ##
+                ##                                                                                              ##
+                ##################################################################################################
+                        finished_race_brand_query = f"""
+                            SELECT 
+                                (SELECT COUNT(brand) FROM data) AS All_Brands,
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
+                            FROM
+                                data
+                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+
+                        """
+                        finished_race_brand = duckdb_connection.execute(finished_race_brand_query).df()
+                        gauge(finished_race_brand.loc[0,'Percentage_Finished']," %","Finished Race (%)")
+
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                       Accident (%) Brand                                     ##
+                ##                                                                                              ##
+                ##################################################################################################
+
+                        accident_race_brand_query = f"""
+                            SELECT 
+                                (SELECT COUNT(brand) FROM data) AS All_Brands,
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
+                            FROM
+                                data
+                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+
+                        """
+                        accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
+                        gauge(accident_race_brand.loc[0,'Percentage_Accident']," %","Accident (%)")
