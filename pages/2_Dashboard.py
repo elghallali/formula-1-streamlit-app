@@ -125,6 +125,49 @@ with st.container():
     with tab_1:
         duckdb_connection = duckdb.connect()
         with st.container():
+            cols = st.columns(5)
+            for i in range(len(cols)):
+                with cols[i]:
+                    if i == 0:
+                        expander_label = "Race Name"
+                        column_data = data['GPName']
+                        text = ''
+                    elif i == 1:
+                        expander_label = "Driver Name"
+                        column_data = data['driverName']
+                        text = ''
+                    elif i == 2:
+                        expander_label = "Driver Nationality"
+                        column_data = data['driverNationality']
+                        text = ''
+                    elif i == 3:
+                        expander_label = "Brand Name"
+                        column_data = data['brand']
+                        text = ''
+                    elif i == 4:
+                        expander_label = "Brand Nationality"
+                        column_data = data['brandNationality']
+                        text = 'brand_'
+
+                    with st.expander(expander_label):
+                        # Get unique items in the column
+                        unique_items = column_data.unique()
+
+                        # Display the selected items
+                        for item in unique_items:
+                            st.checkbox(item, key=f"check_all_{text}{item}")
+
+                        st.markdown(
+                            """
+                            <style>
+                                [data-testid="stExpanderDetails"] {
+                                    max-height: 200px;
+                                    overflow-y: auto;
+                                }
+                            </style>
+                            """,
+                            unsafe_allow_html=True
+                        )
             col1,col2,col3 = st.columns([3,3,8])
             with col1:
                 
@@ -430,6 +473,49 @@ with st.container():
                 ##################################################################################################
     with tab_2:
         with st.container():
+            cols = st.columns(5)
+            for i in range(len(cols)):
+                with cols[i]:
+                    if i == 0:
+                        expander_label = "Race Name"
+                        column_data = data['GPName']
+                        text = 'team_'
+                    elif i == 1:
+                        expander_label = "Driver Name"
+                        column_data = data['driverName']
+                        text = 'team_'
+                    elif i == 2:
+                        expander_label = "Driver Nationality"
+                        column_data = data['driverNationality']
+                        text = 'team_'
+                    elif i == 3:
+                        expander_label = "Brand Name"
+                        column_data = data['brand']
+                        text = 'team_'
+                    elif i == 4:
+                        expander_label = "Brand Nationality"
+                        column_data = data['brandNationality']
+                        text = 'team_brand_'
+
+                    with st.expander(expander_label):
+                        # Get unique items in the column
+                        unique_items = column_data.unique()
+
+                        # Display the selected items
+                        for item in unique_items:
+                            st.checkbox(item, key=f"check_all_{text}{item}")
+
+                        st.markdown(
+                            """
+                            <style>
+                                [data-testid="stExpanderDetails"] {
+                                    max-height: 200px;
+                                    overflow-y: auto;
+                                }
+                            </style>
+                            """,
+                            unsafe_allow_html=True
+                        )
             col1,col2,col3 = st.columns([3,3,8])
             with col1:
                 ##################################################################################################
