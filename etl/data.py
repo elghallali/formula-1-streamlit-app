@@ -3,7 +3,13 @@ import numpy as np
 import os
 
 from etl.extracts import Extracts
+from etl.transforms import Transforms
 
+#############################################################################
+###                                                                       ###
+###                             Extracts data                             ###
+###                                                                       ###
+#############################################################################
 
 circuits = Extracts(os.getcwd() +'/data/circuits.csv','csv').load_data()
 laptimes = Extracts(os.getcwd() +'/data/lap_times.csv','csv').load_data()
@@ -20,8 +26,9 @@ results = Extracts(os.getcwd() +'/data/results.csv','csv').load_data()
 qualifying = Extracts(os.getcwd() +'/data/qualifying.csv','csv').load_data()
 
 #############################################################################
-###
-###
+###                                                                       ###
+###                            Transform Data                             ###
+###                                                                       ###
 #############################################################################
 def factTable():
 
@@ -33,11 +40,11 @@ def factTable():
     drivers['driverName']= drivers['forename']+ ' ' + drivers['surname']
     drivers['driverNationality']= drivers['nationality']
 
-
-    df = pd.merge(results, races[['raceId','year','GPName','round']], on='raceId', how='left')
-    df = pd.merge(df, drivers[['driverId', 'driverName','driverNationality']], on='driverId', how='left')
-    df = pd.merge(df, constructors[['constructorId', 'brand', 'brandNationality']], on='constructorId', how='left')
-    df = pd.merge(df, status, on='statusId', how='left')
+    
+    df = Transforms(results, param0=races[['raceId','year','GPName','round']],param1='raceId',how='left').transform_state()
+    df = Transforms(df, param0=drivers[['driverId', 'driverName','driverNationality']], param1='driverId', how='left').transform_state()
+    df = Transforms(df, param0=constructors[['constructorId', 'brand', 'brandNationality']], param1='constructorId', how='left').transform_state()
+    df = Transforms(df, param0=status, param1='statusId', how='left').transform_state()
     df = df.drop(['resultId','raceId','constructorId', 'driverId', 'statusId', 'number', 'position', 'positionText', 'laps', 'fastestLap','grid'], axis=1)
     df = df.sort_values(by=['year', 'round', 'positionOrder'], ascending=[False, True, True])
     df.time.replace('\\N',np.nan, inplace=True)

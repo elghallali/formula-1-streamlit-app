@@ -26,19 +26,40 @@ st.set_page_config(
     page_icon=logo,
     layout='wide'
 )
+col_logos_1,col_logos_2,col_logos_3 = st.columns([1,8,1])
+with col_logos_2:
+    st.markdown("""
+            <style>
+                .logos {
+                    background-color: white;
+                    height: 170px;
+                    display: flex;
+                    justify-content: center;
+                }
+                .img1 {
+                    
+                }
+                .img2 {
+                
+                }
+                .img3 {
+                
+                }
+            </style>
+            <div class="logos">
+              <img class="img1" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" />
+              <img class="img2" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
+              <img class="img3" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" />
+            </div>
+    """,unsafe_allow_html=True)
 st.markdown("""
-<div>
-  <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" align="left"/>
-  <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" align="right"/>
-</div>
-<br><br>
-<br><br>
-<br><br>
-<div align="center">
-  <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
-</div>
-""",unsafe_allow_html=True)
-st.markdown('# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Formula 1 Application',unsafe_allow_html=True)
+            
+            <div align="center" >
+
+            # <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Formula 1 Application
+
+            </div>
+            """,unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
 hide_st_style = """
             <style>
@@ -194,8 +215,355 @@ with st.container():
 
     st.subheader('Dashboard')
 
-    dashboard1,dashboard2 = st.columns(2)
-    with dashboard1:
-        st.image(dashboard_driver)
-    with dashboard2:
-        st.image(dashboard_team)
+st.markdown("""
+        <style>
+            .loader {
+                  position: relative;
+                  width: 75px;
+                  height: 100px;
+                }
+
+            .loader__bar {
+              position: absolute;
+              bottom: 0;
+              width: 10px;
+              height: 50%;
+              background: rgb(255, 0, 0);
+              transform-origin: center bottom;
+              box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+            }
+
+            .loader__bar:nth-child(1) {
+              left: 0px;
+              transform: scale(1, 0.2);
+              -webkit-animation: barUp1 4s infinite;
+              animation: barUp1 4s infinite;
+            }
+
+            .loader__bar:nth-child(2) {
+              left: 15px;
+              transform: scale(1, 0.4);
+              -webkit-animation: barUp2 4s infinite;
+              animation: barUp2 4s infinite;
+            }
+
+            .loader__bar:nth-child(3) {
+              left: 30px;
+              transform: scale(1, 0.6);
+              -webkit-animation: barUp3 4s infinite;
+              animation: barUp3 4s infinite;
+            }
+
+            .loader__bar:nth-child(4) {
+              left: 45px;
+              transform: scale(1, 0.8);
+              -webkit-animation: barUp4 4s infinite;
+              animation: barUp4 4s infinite;
+            }
+
+            .loader__bar:nth-child(5) {
+              left: 60px;
+              transform: scale(1, 1);
+              -webkit-animation: barUp5 4s infinite;
+              animation: barUp5 4s infinite;
+            }
+
+            .loader__ball {
+              position: absolute;
+              bottom: 10px;
+              left: 0;
+              width: 10px;
+              height: 10px;
+              background: rgb(44, 143, 255);
+              border-radius: 50%;
+              -webkit-animation: ball624 4s infinite;
+              animation: ball624 4s infinite;
+            }
+
+            @keyframes ball624 {
+              0% {
+                transform: translate(0, 0);
+              }
+
+              5% {
+                transform: translate(8px, -14px);
+              }
+
+              10% {
+                transform: translate(15px, -10px);
+              }
+
+              17% {
+                transform: translate(23px, -24px);
+              }
+
+              20% {
+                transform: translate(30px, -20px);
+              }
+
+              27% {
+                transform: translate(38px, -34px);
+              }
+
+              30% {
+                transform: translate(45px, -30px);
+              }
+
+              37% {
+                transform: translate(53px, -44px);
+              }
+
+              40% {
+                transform: translate(60px, -40px);
+              }
+
+              50% {
+                transform: translate(60px, 0);
+              }
+
+              57% {
+                transform: translate(53px, -14px);
+              }
+
+              60% {
+                transform: translate(45px, -10px);
+              }
+
+              67% {
+                transform: translate(37px, -24px);
+              }
+
+              70% {
+                transform: translate(30px, -20px);
+              }
+
+              77% {
+                transform: translate(22px, -34px);
+              }
+
+              80% {
+                transform: translate(15px, -30px);
+              }
+
+              87% {
+                transform: translate(7px, -44px);
+              }
+
+              90% {
+                transform: translate(0, -40px);
+              }
+
+              100% {
+                transform: translate(0, 0);
+              }
+            }
+
+            @-webkit-keyframes barUp1 {
+              0% {
+                transform: scale(1, 0.2);
+              }
+
+              40% {
+                transform: scale(1, 0.2);
+              }
+
+              50% {
+                transform: scale(1, 1);
+              }
+
+              90% {
+                transform: scale(1, 1);
+              }
+
+              100% {
+                transform: scale(1, 0.2);
+              }
+            }
+
+            @keyframes barUp1 {
+              0% {
+                transform: scale(1, 0.2);
+              }
+
+              40% {
+                transform: scale(1, 0.2);
+              }
+
+              50% {
+                transform: scale(1, 1);
+              }
+
+              90% {
+                transform: scale(1, 1);
+              }
+
+              100% {
+                transform: scale(1, 0.2);
+              }
+            }
+
+            @-webkit-keyframes barUp2 {
+              0% {
+                transform: scale(1, 0.4);
+              }
+
+              40% {
+                transform: scale(1, 0.4);
+              }
+
+              50% {
+                transform: scale(1, 0.8);
+              }
+
+              90% {
+                transform: scale(1, 0.8);
+              }
+
+              100% {
+                transform: scale(1, 0.4);
+              }
+            }
+
+            @keyframes barUp2 {
+              0% {
+                transform: scale(1, 0.4);
+              }
+
+              40% {
+                transform: scale(1, 0.4);
+              }
+
+              50% {
+                transform: scale(1, 0.8);
+              }
+
+              90% {
+                transform: scale(1, 0.8);
+              }
+
+              100% {
+                transform: scale(1, 0.4);
+              }
+            }
+
+            @-webkit-keyframes barUp3 {
+              0% {
+                transform: scale(1, 0.6);
+              }
+
+              100% {
+                transform: scale(1, 0.6);
+              }
+            }
+
+            @keyframes barUp3 {
+              0% {
+                transform: scale(1, 0.6);
+              }
+
+              100% {
+                transform: scale(1, 0.6);
+              }
+            }
+
+            @-webkit-keyframes barUp4 {
+              0% {
+                transform: scale(1, 0.8);
+              }
+
+              40% {
+                transform: scale(1, 0.8);
+              }
+
+              50% {
+                transform: scale(1, 0.4);
+              }
+
+              90% {
+                transform: scale(1, 0.4);
+              }
+
+              100% {
+                transform: scale(1, 0.8);
+              }
+            }
+
+            @keyframes barUp4 {
+              0% {
+                transform: scale(1, 0.8);
+              }
+
+              40% {
+                transform: scale(1, 0.8);
+              }
+
+              50% {
+                transform: scale(1, 0.4);
+              }
+
+              90% {
+                transform: scale(1, 0.4);
+              }
+
+              100% {
+                transform: scale(1, 0.8);
+              }
+            }
+
+            @-webkit-keyframes barUp5 {
+              0% {
+                transform: scale(1, 1);
+              }
+
+              40% {
+                transform: scale(1, 1);
+              }
+
+              50% {
+                transform: scale(1, 0.2);
+              }
+
+              90% {
+                transform: scale(1, 0.2);
+              }
+
+              100% {
+                transform: scale(1, 1);
+              }
+            }
+
+            @keyframes barUp5 {
+              0% {
+                transform: scale(1, 1);
+              }
+
+              40% {
+                transform: scale(1, 1);
+              }
+
+              50% {
+                transform: scale(1, 0.2);
+              }
+
+              90% {
+                transform: scale(1, 0.2);
+              }
+
+              100% {
+                transform: scale(1, 1);
+                }
+            }
+
+        </style>
+        <div>
+            <div class="loader">
+                <div class="loader__bar"></div>
+                <div class="loader__bar"></div>
+                <div class="loader__bar"></div>
+                <div class="loader__bar"></div>
+                <div class="loader__bar"></div>
+                <div class="loader__ball"></div>
+            </div>
+        </div>
+""",unsafe_allow_html=True)
+    
