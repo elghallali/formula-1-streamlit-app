@@ -1,33 +1,34 @@
 import pandas as pd
 
 class Extracts:
-    def __init__(self,datasource,extension):
+    def __init__(self,datasource):
         self.datasource = datasource
-        self.extension = extension
+        self.extension = self.datasource.split('/')[-1].split('.')[-1]
+        self.name = self.datasource.split('/')[-1].split('.')[0].replace('_',' ').capitalize()
 
     def __read_csv_file(self, sep=','):
         df = pd.read_csv(filepath_or_buffer=self.datasource, sep=sep)
-        return df
+        return df,self.name
     
     def __read_excel_file(self):
         df = pd.read_excel(io=self.datasource)
-        return df
+        return df,self.name
     
     def __read_json_file(self):
         df = pd.read_json(filepath_or_buf=self.datasource)
-        return df
+        return df,self.name
     
     def __read_xml_file(self):
         df = pd.read_xml(filepath_or_buffer=self.datasource)
-        return df
+        return df,self.name
     
     def __read_html_file(self):
         df = pd.read_html(io=self.datasource)
-        return df
+        return df,self.name
     
     def __read_pickle_file(self):
         df = pd.read_pickle(filepath_or_buffer=self.datasource)
-        return df
+        return df,self.name
     
     def load_data(self):
         if self.extension in ['xlsx', 'xls']:

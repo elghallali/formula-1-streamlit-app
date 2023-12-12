@@ -7,7 +7,7 @@ import io
 import warnings
 
 
-from etl.extracts import Extracts
+from etl.data import circuits, laptimes,pitstops,seasons,status,constructor_standings ,constructors ,driver_standings,drivers,races,constructor_results,results,qualifying
 
 warnings.filterwarnings('ignore')
 
@@ -19,12 +19,7 @@ st.set_page_config(
     page_icon=logo,
     layout='wide'
 )
-@st.cache_data
-def load_data(path:str):
-    data = pd.read_csv(path)
-    return data
 
-csv_files = glob.glob('data/*.csv')
 
 st.markdown(f'# <img src="https://raw.githubusercontent.com/elghallali/formula-1-streamlit-app/master/images/f1_logo.png" alt="Formula 1 Logo" width=100/> Formula 1 EDA',unsafe_allow_html=True)
 st.markdown('<style> div.block-container {padding-top: 0.1rem;}</style>',unsafe_allow_html=True)
@@ -36,12 +31,10 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
-
+list_ = [circuits, laptimes,pitstops,seasons,status,constructor_standings ,constructors ,driver_standings,drivers,races,constructor_results,results,qualifying]
 data = {}
-for file in csv_files:
-    title = file.replace('\\','/').split('/')[-1].split('.')[0].replace('_',' ').capitalize()
-    extension = file.replace('\\','/').split('/')[-1].split('.')[-1]
-    df = Extracts(file, extension).load_data()
+for item in list_:
+    df,title = item
     data[title]= df
 
 def visualDataFrame(df):

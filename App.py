@@ -105,7 +105,7 @@ with st.container():
     tool1,tool2,tool3,tool4,tool5,tool6,tool7,tool8,tool9,tool10,tool11= st.columns(11)
     st.markdown("""
         <style>
-            button {
+            .image {
                 background-color: transparent;
                 border: none;  /* Remove the button border */
                 background-color: white;
@@ -116,130 +116,127 @@ with st.container():
                 justify-content: center;
                 align-items: center;
             }
-            button img {
+            .image img {
                 position:relative
                 padding:5px;
             }
-            button:hover {
+            .image:hover {
                 background-color: #999999;
             }
-            .description {
-                display: none;
-                text-align: center;
-                color: white;
-            }
+            
         </style>
     """, unsafe_allow_html=True)
     with tool1:
         st.markdown("""
-                    <button id="python" onclick="toggleDescription('python')">
+                    <div class="image">
                     <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/python/python-original-wordmark.svg" alt="" with=80 height=80>
-                    </button>
+                    </div>
                     
                     """, unsafe_allow_html=True)
     with tool2:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/vscode/vscode-original-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool3:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/git/git-original-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool4:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/docker/docker-plain-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool5:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/numpy/numpy-original-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool6:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/pandas/pandas-original-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool7:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/devicons/devicon/55609aa5bd817ff167afce0d965585c92040787a/icons/github/github-original-wordmark.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool8:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/elghallali/my-images/aff6e3ea2f3f31483187856b7c9d412852c9205c/streamlit-logo-primary-colormark-darktext.svg" alt="" with=80 height=60>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool9:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://camo.githubusercontent.com/20db5efd6873b071b1c72818028df47ce86c511d7560e789c34ba1811593c3eb/68747470733a2f2f73746f72652d696d616765732e732d6d6963726f736f66742e636f6d2f696d6167652f617070732e33363836382e62666230653265652d626539652d346337332d383037662d6530613762383035623162652e37313261666635642d353830302d343765302d393762652d3538643137616461336662382e61343638343565362d636539342d343463662d383932622d353436333763366663663036" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool10:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://raw.githubusercontent.com/elghallali/my-images/aff6e3ea2f3f31483187856b7c9d412852c9205c/GitHub%20Actions.svg" alt="" with=80 height=80>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
     with tool11:
         st.markdown("""
-                 <button>
+                 <div class="image">
                  <img src="https://camo.githubusercontent.com/9f56ecb12a5b746c29c31e08e91a1f3cf483f8a3657118be1530cf8c3ae674a2/68747470733a2f2f6475636b64622e6f72672f696d616765732f6c6f676f2d646c2f4475636b44425f4c6f676f2d737461636b65642e737667" alt="" with=80 height=60>
-                 </button>
+                 </div>
                  """, unsafe_allow_html=True)
 
     st.subheader('ETL')
     col_etl = st.columns(4)
     with col_etl[0]:
-      button1 = st.button('Extracts',use_container_width=True)
+      button1 = st.button('**Extracts**',use_container_width=True)
     with col_etl[1]:
-      button2 =st.button('Transforms',use_container_width=True)
+      button2 =st.button('**Transforms**',use_container_width=True)
     with col_etl[2]:
-      button3 = st.button('Loads',use_container_width=True)
+      button3 = st.button('**Loads**',use_container_width=True)
     with col_etl[3]:
-      button4 = st.button('Data',use_container_width=True)
+      button4 = st.button('**Data**',use_container_width=True)
     if button1:
         st.code("""
 import pandas as pd
 
 class Extracts:
-    def __init__(self,datasource,extension):
+    def __init__(self,datasource):
         self.datasource = datasource
-        self.extension = extension
+        self.extension = self.datasource.split('/')[-1].split('.')[-1]
+        self.name = self.datasource.split('/')[-1].split('.')[0].replace('_',' ').capitalize()
 
     def __read_csv_file(self, sep=','):
         df = pd.read_csv(filepath_or_buffer=self.datasource, sep=sep)
-        return df
+        return df,self.name
     
     def __read_excel_file(self):
         df = pd.read_excel(io=self.datasource)
-        return df
+        return df,self.name
     
     def __read_json_file(self):
         df = pd.read_json(filepath_or_buf=self.datasource)
-        return df
+        return df,self.name
     
     def __read_xml_file(self):
         df = pd.read_xml(filepath_or_buffer=self.datasource)
-        return df
+        return df,self.name
     
     def __read_html_file(self):
         df = pd.read_html(io=self.datasource)
-        return df
+        return df,self.name
     
     def __read_pickle_file(self):
         df = pd.read_pickle(filepath_or_buffer=self.datasource)
-        return df
+        return df,self.name
     
     def load_data(self):
         if self.extension in ['xlsx', 'xls']:
@@ -317,19 +314,19 @@ from etl.transforms import Transforms
 ###                                                                       ###
 #############################################################################
 
-circuits = Extracts(os.getcwd() +'/data/circuits.csv','csv').load_data()
-laptimes = Extracts(os.getcwd() +'/data/lap_times.csv','csv').load_data()
-pitstops = Extracts(os.getcwd() +'/data/pit_stops.csv','csv').load_data()
-seasons = Extracts(os.getcwd() +'/data/seasons.csv' ,'csv').load_data()
-status = Extracts(os.getcwd() +'/data/status.csv','csv').load_data()
-constructor_standings = Extracts(os.getcwd() +'/data/constructor_standings.csv','csv').load_data()
-constructors = Extracts(os.getcwd() +'/data/constructors.csv','csv').load_data()
-driver_standings = Extracts(os.getcwd() +'/data/driver_standings.csv','csv').load_data()
-drivers = Extracts(os.getcwd() +'/data/drivers.csv','csv').load_data()
-races = Extracts(os.getcwd() +'/data/races.csv','csv').load_data()
-constructor_results = Extracts(os.getcwd() +'/data/constructor_results.csv','csv').load_data()
-results = Extracts(os.getcwd() +'/data/results.csv','csv').load_data()
-qualifying = Extracts(os.getcwd() +'/data/qualifying.csv','csv').load_data()
+circuits = Extracts(os.getcwd() +'/data/circuits.csv').load_data()
+laptimes = Extracts(os.getcwd() +'/data/lap_times.csv').load_data()
+pitstops = Extracts(os.getcwd() +'/data/pit_stops.csv').load_data()
+seasons = Extracts(os.getcwd() +'/data/seasons.csv').load_data()
+status = Extracts(os.getcwd() +'/data/status.csv').load_data()
+constructor_standings = Extracts(os.getcwd() +'/data/constructor_standings.csv').load_data()
+constructors = Extracts(os.getcwd() +'/data/constructors.csv').load_data()
+driver_standings = Extracts(os.getcwd() +'/data/driver_standings.csv').load_data()
+drivers = Extracts(os.getcwd() +'/data/drivers.csv').load_data()
+races = Extracts(os.getcwd() +'/data/races.csv').load_data()
+constructor_results = Extracts(os.getcwd() +'/data/constructor_results.csv').load_data()
+results = Extracts(os.getcwd() +'/data/results.csv').load_data()
+qualifying = Extracts(os.getcwd() +'/data/qualifying.csv').load_data()
 
 #############################################################################
 ###                                                                       ###
@@ -338,19 +335,19 @@ qualifying = Extracts(os.getcwd() +'/data/qualifying.csv','csv').load_data()
 #############################################################################
 def factTable():
 
-    races['GPName'] = races['name']
+    races[0]['GPName'] = races[0]['name']
 
-    constructors['brandNationality']= constructors['nationality']
-    constructors['brand']= constructors['name']
+    constructors[0]['brandNationality']= constructors[0]['nationality']
+    constructors[0]['brand']= constructors[0]['name']
 
-    drivers['driverName']= drivers['forename']+ ' ' + drivers['surname']
-    drivers['driverNationality']= drivers['nationality']
+    drivers[0]['driverName']= drivers[0]['forename']+ ' ' + drivers[0]['surname']
+    drivers[0]['driverNationality']= drivers[0]['nationality']
 
     
-    df = Transforms(results, param0=races[['raceId','year','GPName','round']],param1='raceId',how='left').transform_state()
-    df = Transforms(df, param0=drivers[['driverId', 'driverName','driverNationality']], param1='driverId', how='left').transform_state()
-    df = Transforms(df, param0=constructors[['constructorId', 'brand', 'brandNationality']], param1='constructorId', how='left').transform_state()
-    df = Transforms(df, param0=status, param1='statusId', how='left').transform_state()
+    df = Transforms(results[0], param0=races[0][['raceId','year','GPName','round']],param1='raceId',how='left').transform_state()
+    df = Transforms(df, param0=drivers[0][['driverId', 'driverName','driverNationality']], param1='driverId', how='left').transform_state()
+    df = Transforms(df, param0=constructors[0][['constructorId', 'brand', 'brandNationality']], param1='constructorId', how='left').transform_state()
+    df = Transforms(df, param0=status[0], param1='statusId', how='left').transform_state()
     df = df.drop(['resultId','raceId','constructorId', 'driverId', 'statusId', 'number', 'position', 'positionText', 'laps', 'fastestLap','grid'], axis=1)
     df = df.sort_values(by=['year', 'round', 'positionOrder'], ascending=[False, True, True])
     df.time.replace('\\N',np.nan, inplace=True)

@@ -29,6 +29,13 @@ warnings.filterwarnings('ignore')
                 ##                                                                                              ##
                 ##                                                                                              ##
                 ##################################################################################################
+qualifying0 = qualifying[0] 
+results0 = results[0]
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
 
 path_file = os.getcwd()+ '/images/f1_logo.png'
 logo = Image.open(path_file)
@@ -350,9 +357,9 @@ with st.container():
                                 q.driverId AS DriverId,
                                 r.points AS Points
                             FROM
-                                qualifying q
+                                qualifying0 q
                             JOIN
-                                results r ON q.raceId = r.raceId AND q.driverId = r.driverId
+                                results0 r ON q.raceId = r.raceId AND q.driverId = r.driverId
                             GROUP BY q.position, q.raceId, q.driverId, r.points
                         """
                         starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
@@ -702,9 +709,9 @@ with st.container():
                                 q.constructorId AS ConstructorId,
                                 r.points AS Points
                             FROM
-                                qualifying q
+                                qualifying0 q
                             JOIN
-                                results r ON q.raceId = r.raceId AND q.constructorId = r.constructorId
+                                results0 r ON q.raceId = r.raceId AND q.constructorId = r.constructorId
                             GROUP BY q.position, q.raceId, q.constructorId, r.points
                         """
                         starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
