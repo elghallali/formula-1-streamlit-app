@@ -34,22 +34,15 @@ with col_logos_2:
                     background-color: white;
                     height: 170px;
                     display: flex;
-                    justify-content: center;
+                    justify-content: space-between;
+                    align-items: center
                 }
-                .img1 {
-                    
-                }
-                .img2 {
                 
-                }
-                .img3 {
-                
-                }
             </style>
             <div class="logos">
-              <img class="img1" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" />
-              <img class="img2" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
-              <img class="img3" src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" />
+              <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" />
+              <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/logo.png" title="DSDS" alt="DSDS" width="400" height="150"/>
+              <img src="https://raw.githubusercontent.com/elghallali/my-images/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" /> 
             </div>
     """,unsafe_allow_html=True)
 st.markdown("""
@@ -136,12 +129,6 @@ with st.container():
                 color: white;
             }
         </style>
-        <script>
-            function toggleDescription() {
-                var description = document.getElementById("python_description");
-                description.style.display = description.style.display === "none" ? "block" : "none";
-            }
-        </script>
     """, unsafe_allow_html=True)
     with tool1:
         st.markdown("""
