@@ -198,7 +198,171 @@ with st.container():
                  </button>
                  """, unsafe_allow_html=True)
 
-    st.subheader('Dataset')
+    st.subheader('ETL')
+    col_etl = st.columns(4)
+    with col_etl[0]:
+      button1 = st.button('Extracts',use_container_width=True)
+    with col_etl[1]:
+      button2 =st.button('Transforms',use_container_width=True)
+    with col_etl[2]:
+      button3 = st.button('Loads',use_container_width=True)
+    with col_etl[3]:
+      button4 = st.button('Data',use_container_width=True)
+    if button1:
+        st.code("""
+import pandas as pd
+
+class Extracts:
+    def __init__(self,datasource,extension):
+        self.datasource = datasource
+        self.extension = extension
+
+    def __read_csv_file(self, sep=','):
+        df = pd.read_csv(filepath_or_buffer=self.datasource, sep=sep)
+        return df
+    
+    def __read_excel_file(self):
+        df = pd.read_excel(io=self.datasource)
+        return df
+    
+    def __read_json_file(self):
+        df = pd.read_json(filepath_or_buf=self.datasource)
+        return df
+    
+    def __read_xml_file(self):
+        df = pd.read_xml(filepath_or_buffer=self.datasource)
+        return df
+    
+    def __read_html_file(self):
+        df = pd.read_html(io=self.datasource)
+        return df
+    
+    def __read_pickle_file(self):
+        df = pd.read_pickle(filepath_or_buffer=self.datasource)
+        return df
+    
+    def load_data(self):
+        if self.extension in ['xlsx', 'xls']:
+            return self.__read_excel_file()
+        elif self.extension in ['csv', 'tsv', 'txt']:
+            return self.__read_csv_file()
+        elif self.extension == 'tsv':
+            return self.__read_csv_file(sep=' ')
+        elif self.extension == 'json':
+            return self.__read_json_file()
+        elif self.extension == 'html':
+            return self.__read_html_file()
+        elif self.extension == 'xml':
+            return self.__read_xml_file()
+        else:
+            return self.__read_html_file()
+""")
+    if button2:
+        st.code("""
+import pandas as pd
+
+class Transforms:
+    def __init__(self,dataset,param0='',param1='',how='inner'):
+        self.dataset = dataset
+        self.param0 = param0
+        self.param1 = param1
+        self.how = how
+
+    def split_columns(self):
+        df = self.dataset[self.param0].str.split(self.param1, expand=True)
+        return df
+    
+    def transform_state(self):
+        df = pd.merge(self.dataset, self.param0, on=self.param1, how=self.how)
+        return df
+    
+""")
+    if button3:
+        st.code("""
+import pandas as pd
+
+class Loads:
+    def __init__(self,dataset, outputdir,filename):
+        self.dataset = dataset
+        self.outputdir = outputdir
+        self.filename = filename
+
+    def send_to_csv(self):
+        self.dataset.to_csv(path_or_buf=self.outputdir + self.filename, index=False)
+    
+    def send_to_excel(self):
+        self.dataset.to_excel(excel_writer=self.outputdir + self.filename, index=False)
+
+    def send_to_parquet(self):
+        self.dataset.to_parquet(path=self.outputdir + self.filename, index=False)
+
+    def send_to_feather(self):
+        self.dataset.to_feather(path=self.outputdir + self.filename)
+
+    def send_to_pickle(self):
+        self.dataset.to_pickle(path=self.outputdir + self.filename, compression='gzip')
+""")
+    if button4:
+        st.code("""
+import pandas as pd
+import numpy as np
+import os
+
+from etl.extracts import Extracts
+from etl.transforms import Transforms
+
+#############################################################################
+###                                                                       ###
+###                             Extracts data                             ###
+###                                                                       ###
+#############################################################################
+
+circuits = Extracts(os.getcwd() +'/data/circuits.csv','csv').load_data()
+laptimes = Extracts(os.getcwd() +'/data/lap_times.csv','csv').load_data()
+pitstops = Extracts(os.getcwd() +'/data/pit_stops.csv','csv').load_data()
+seasons = Extracts(os.getcwd() +'/data/seasons.csv' ,'csv').load_data()
+status = Extracts(os.getcwd() +'/data/status.csv','csv').load_data()
+constructor_standings = Extracts(os.getcwd() +'/data/constructor_standings.csv','csv').load_data()
+constructors = Extracts(os.getcwd() +'/data/constructors.csv','csv').load_data()
+driver_standings = Extracts(os.getcwd() +'/data/driver_standings.csv','csv').load_data()
+drivers = Extracts(os.getcwd() +'/data/drivers.csv','csv').load_data()
+races = Extracts(os.getcwd() +'/data/races.csv','csv').load_data()
+constructor_results = Extracts(os.getcwd() +'/data/constructor_results.csv','csv').load_data()
+results = Extracts(os.getcwd() +'/data/results.csv','csv').load_data()
+qualifying = Extracts(os.getcwd() +'/data/qualifying.csv','csv').load_data()
+
+#############################################################################
+###                                                                       ###
+###                            Transform Data                             ###
+###                                                                       ###
+#############################################################################
+def factTable():
+
+    races['GPName'] = races['name']
+
+    constructors['brandNationality']= constructors['nationality']
+    constructors['brand']= constructors['name']
+
+    drivers['driverName']= drivers['forename']+ ' ' + drivers['surname']
+    drivers['driverNationality']= drivers['nationality']
+
+    
+    df = Transforms(results, param0=races[['raceId','year','GPName','round']],param1='raceId',how='left').transform_state()
+    df = Transforms(df, param0=drivers[['driverId', 'driverName','driverNationality']], param1='driverId', how='left').transform_state()
+    df = Transforms(df, param0=constructors[['constructorId', 'brand', 'brandNationality']], param1='constructorId', how='left').transform_state()
+    df = Transforms(df, param0=status, param1='statusId', how='left').transform_state()
+    df = df.drop(['resultId','raceId','constructorId', 'driverId', 'statusId', 'number', 'position', 'positionText', 'laps', 'fastestLap','grid'], axis=1)
+    df = df.sort_values(by=['year', 'round', 'positionOrder'], ascending=[False, True, True])
+    df.time.replace('\\N',np.nan, inplace=True)
+    df.milliseconds.replace('\\N',np.nan, inplace=True)
+    df.fastestLapTime.replace('\\N',np.nan, inplace=True)
+    df.fastestLapSpeed.replace('\\N',np.nan, inplace=True)
+    df.fastestLapSpeed = df.fastestLapSpeed.astype(float)
+    df.milliseconds =df.milliseconds.astype(float)
+    return df
+""")
+        
+
 
     st.subheader('Dashboard')
 
@@ -554,3 +718,5 @@ st.markdown("""
         </div>
 """,unsafe_allow_html=True)
     
+
+
