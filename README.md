@@ -107,7 +107,7 @@ pip install -r requirements.txt
 #### Run the application
 
 ```cmd
-streamlit run app.py
+streamlit run App.py
 ```
 
 ---
