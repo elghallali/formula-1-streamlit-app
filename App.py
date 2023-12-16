@@ -120,10 +120,10 @@ with st.container():
     datasource_col0,datasource_col1,datasource_col2,datasource_col3,datasource_col4 = st.columns(5)
     with datasource_col1:
         # Display the QR code in Streamlit
-        st.image(img_bytes_1, width=250,caption='Data Source QR Code')
+        st.image(img_bytes_1, caption='Data Source QR Code')
     with datasource_col3:
         # Display the QR code in Streamlit
-        st.image(img_bytes_2, width=250, caption='Our Application QR Code')
+        st.image(img_bytes_2, caption='Our Application QR Code')
     st.subheader('Tools')
     tool1,tool2,tool3,tool4,tool5,tool6,tool7,tool8,tool9,tool10,tool11= st.columns(11)
     st.markdown("""
