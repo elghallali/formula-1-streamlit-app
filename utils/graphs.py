@@ -10,8 +10,8 @@ def pie(labels,values,title=''):
     
 
     # pull is given as a fraction of the pie radius
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values,title=title, hole=.7)])
-    fig.update_layout(clickmode='event+select')
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values, hole=.7)])
+    fig.update_layout(clickmode='event+select',title=title, title_x=0.2)
     st.plotly_chart(fig, use_container_width=True)
 
 def plot(df,x,y,title):
@@ -24,9 +24,9 @@ def plot(df,x,y,title):
     st.plotly_chart(fig, use_container_width=True)
     
 
-def scatter(df,x,y,hover_name=None, size_max=20, log_x=False, marker_color=None):
-    fig = px.scatter(df, x=x, y=y, hover_name=hover_name, log_x=log_x, size_max=size_max,color=marker_color)
-    fig.update_layout(clickmode='event+select')
+def scatter(df,x,y,title='',hover_name=None,  log_x=False, marker_color=None):
+    fig = px.scatter(df, x=x, y=y, hover_name=hover_name, log_x=log_x, color=marker_color)
+    fig.update_layout(clickmode='event+select',title=title,title_x=0.2)
     st.plotly_chart(fig, use_container_width=True)
 
 def gauge(value,suffix,title,font= {'color': "white", 'family': "Arial"}, height=190, margin=dict(l=10, r=10, t=50, b=10, pad=8)):

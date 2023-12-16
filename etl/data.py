@@ -39,14 +39,18 @@ def factTable():
 
     drivers[0]['driverName']= drivers[0]['forename']+ ' ' + drivers[0]['surname']
     drivers[0]['driverNationality']= drivers[0]['nationality']
-
+    qualifying[0]['startingPosition'] = qualifying[0]['position']
+    df_pitstop = pitstops[0].groupby(['raceId', 'driverId']).agg(duration=('milliseconds', 'sum')).reset_index()
     
     df = Transforms(results[0], param0=races[0][['raceId','year','GPName','round']],param1='raceId',how='left').transform_state()
     df = Transforms(df, param0=drivers[0][['driverId', 'driverName','driverNationality']], param1='driverId', how='left').transform_state()
     df = Transforms(df, param0=constructors[0][['constructorId', 'brand', 'brandNationality']], param1='constructorId', how='left').transform_state()
     df = Transforms(df, param0=status[0], param1='statusId', how='left').transform_state()
-    df = df.drop(['resultId','raceId','constructorId', 'driverId', 'statusId', 'number', 'position', 'positionText', 'laps', 'fastestLap','grid'], axis=1)
+    df = Transforms(df, param0=qualifying[0][['raceId', 'driverId','startingPosition']], param1=['raceId', 'driverId'], how='left').transform_state()
+    df = Transforms(df, param0=df_pitstop[['raceId', 'driverId','duration']], param1=['raceId', 'driverId'], how='left').transform_state()
+    df = df.drop(['number', 'position', 'positionText', 'laps', 'fastestLap','grid'], axis=1)
     df = df.sort_values(by=['year', 'round', 'positionOrder'], ascending=[False, True, True])
+    df['driverName'] = df['driverName'].str.replace("'", "", regex=True)
     df.time.replace('\\N',np.nan, inplace=True)
     df.milliseconds.replace('\\N',np.nan, inplace=True)
     df.fastestLapTime.replace('\\N',np.nan, inplace=True)

@@ -3,7 +3,7 @@
                 ##                                                                                              ##
                 ##                                                                                              ##
                 ##################################################################################################
-
+from functools import partial
 import streamlit as st
 from PIL import Image
 import pandas as pd
@@ -112,6 +112,29 @@ def component2(title,value):
         <br>
         </div>
         """, unsafe_allow_html=True)
+    
+                ##################################################################################################
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##                                                                                              ##
+                ##################################################################################################
+def check_change(text,expander_label,data_unique):
+    if st.session_state[f"all_option_{text}{expander_label}"]:
+        st.session_state[f"selected_options_{text}{expander_label}"] = list(data_unique.unique())
+    else:
+        st.session_state[f"selected_options_{text}{expander_label}"] = []
+    return
+
+def multi_change(text,expander_label,data):
+
+    if len(st.session_state[f"selected_options_{text}{expander_label}"]) == len(list(data.unique())):
+        st.session_state[f"all_option_{text}{expander_label}"] = True
+    else:
+        st.session_state[f"all_option_{text}{expander_label}"] = False
+    return
+
+def parameterize_SQL_in_statement(items):
+    return f"""('{"', '".join(items)}')"""
 
                 ##################################################################################################
                 ##                                                                                              ##
@@ -133,37 +156,43 @@ with st.container():
         duckdb_connection = duckdb.connect()
         with st.container():
             cols = st.columns(5)
+            where_dict = {}
             for i in range(len(cols)):
                 with cols[i]:
                     if i == 0:
-                        expander_label = "Race Name"
+                        expander_label = "Race_Name"
                         column_data = data['GPName']
                         text = ''
                     elif i == 1:
-                        expander_label = "Driver Name"
+                        expander_label = "Driver_Name"
                         column_data = data['driverName']
                         text = ''
                     elif i == 2:
-                        expander_label = "Driver Nationality"
+                        expander_label = "Driver_Nationality"
                         column_data = data['driverNationality']
                         text = ''
                     elif i == 3:
-                        expander_label = "Brand Name"
+                        expander_label = "Brand_Name"
                         column_data = data['brand']
                         text = ''
                     elif i == 4:
-                        expander_label = "Brand Nationality"
+                        expander_label = "Brand_Nationality"
                         column_data = data['brandNationality']
-                        text = 'brand_'
-
-                    with st.expander(expander_label):
+                        text = ''
+                    
+                    with st.expander(expander_label.replace('_',' ')):
                         # Get unique items in the column
                         unique_items = column_data.unique()
 
                         # Display the selected items
-                        for item in unique_items:
-                            st.checkbox(item, key=f"check_all_{text}{item}")
+                        if f"all_option_{text}{expander_label}" not in st.session_state:
+                            st.session_state[f"all_option_{text}{expander_label}"] = True
+                            st.session_state[f"selected_options_{text}{expander_label}"] = list(unique_items)
 
+                        # Display the selected items
+                        all = st.checkbox("Select all", key=f"all_option_{text}{expander_label}",on_change= partial(check_change, text, expander_label, column_data))
+                        options = st.multiselect('',list(unique_items),key=f"selected_options_{text}{expander_label}", on_change=partial(multi_change, text, expander_label, column_data))
+                        where_dict[expander_label]= st.session_state[f'selected_options_{text}{expander_label}']
                         st.markdown(
                             """
                             <style>
@@ -175,6 +204,7 @@ with st.container():
                             """,
                             unsafe_allow_html=True
                         )
+            
             col1,col2,col3 = st.columns([3,3,8])
             with col1:
                 
@@ -184,6 +214,21 @@ with st.container():
                 key='divers_slider')
             if year_values[0] <= year_values[1]:
                 selected_start_year_driver, selected_end_year_driver = year_values
+                
+                driverNames = parameterize_SQL_in_statement(where_dict["Driver_Name"])
+                driverNationalities = parameterize_SQL_in_statement(where_dict["Driver_Nationality"])
+                brands =  parameterize_SQL_in_statement(where_dict["Brand_Name"])
+                brandNationalities = parameterize_SQL_in_statement(where_dict["Brand_Nationality"])
+                raceNames = parameterize_SQL_in_statement(where_dict["Race_Name"])
+                where = f"""
+                    (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                    AND driverName IN {driverNames}
+                    AND driverNationality IN {driverNationalities}
+                    AND brand IN {brands}
+                    AND brandNationality IN {brandNationalities}
+                    AND GPName IN {raceNames}
+                """
+                
                 with col2:
                     col4,col5 = st.columns(2)
                     with col4:
@@ -194,7 +239,9 @@ with st.container():
                 ##################################################################################################
                         total_driver_query = f"""
                             SELECT COUNT(DISTINCT driverName) AS driver FROM data
-                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE {where}
+                                
+                                
                         """
                         total_driver = duckdb_connection.execute(total_driver_query).df()
                         component2("Total Driver",total_driver.loc[0,'driver'])
@@ -211,8 +258,7 @@ with st.container():
                                     COUNT(DISTINCT GPName) AS total_GP
                                 FROM
                                     data
-                                WHERE
-                                    year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                                WHERE {where}
                                 GROUP BY  year
                             """
                             result_df = duckdb_connection.execute(total_races).df()
@@ -235,14 +281,20 @@ with st.container():
                             FROM
                                 data
                             WHERE
-                                positionOrder = 1 AND ( year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                positionOrder = 1 AND {where}
                             GROUP BY Winner
                             ORDER BY COUNT(positionOrder) DESC
                         """
 
                         # Execute the query
                         most_winner = duckdb_connection.execute(query_most_winner).df()
-                        component("Most Winning Racer",most_winner.loc[0,'Winner'], most_winner.loc[0,'TotalWin'])
+                        if not most_winner.empty:
+                            winner = most_winner.loc[0,'Winner']
+                            totalWin = most_winner.loc[0,'TotalWin']
+                        else:
+                            winner = ''
+                            totalWin = ''
+                        component("Most Winning Racer",winner, totalWin)
                     with col7:
                 
                 ##################################################################################################
@@ -256,7 +308,7 @@ with st.container():
                                 driverName AS MostParticipating
                             FROM
                                 data
-                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE {where}
                             GROUP BY driverName
                             ORDER BY MaxParticipation DESC
                             LIMIT 1
@@ -264,7 +316,14 @@ with st.container():
 
                         # Execute the query
                         most_participating = duckdb_connection.execute(query_most_participating).df()
-                        component("Most Participating Racer",most_participating.loc[0,'MostParticipating'], most_participating.loc[0,'MaxParticipation'])
+                        if not most_participating.empty:
+                            most_participating_racer = most_participating.loc[0, 'MostParticipating']
+                            participation_count = most_participating.loc[0, 'MaxParticipation']
+                        else:
+                            most_participating_racer = '' 
+                            participation_count = ''  
+
+                        component("Most Participating Racer", most_participating_racer, participation_count)
                     with col8:
 
                 ##################################################################################################
@@ -279,7 +338,7 @@ with st.container():
                                 driverName AS MaxSpeedDriver
                             FROM 
                                 data
-                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE {where}
                             GROUP BY driverName
                             ORDER BY MaxSpeed DESC
                             LIMIT 1
@@ -307,9 +366,9 @@ with st.container():
                                 data,
                                 (SELECT COUNT(DISTINCT driverName) AS Total 
                                 FROM data 
-                                WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                WHERE {where})
 
-                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE {where}
                             GROUP BY driverNationality, Total
                             ORDER BY Percentage DESC
                             LIMIT 4
@@ -336,7 +395,7 @@ with st.container():
                                 FROM
                                     data
 
-                                WHERE Season BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                                WHERE {where}
                                 GROUP BY year
                                 ORDER BY year
                             """
@@ -353,20 +412,19 @@ with st.container():
 
                         starting_position_affect_result_query = f"""
                             SELECT
-                                q.position AS 'Starting Position', 
-                                q.driverId AS DriverId,
-                                r.points AS Points
+                                startingPosition AS 'Starting Position', 
+                                driverName AS DriverName,
+                                points AS Points
                             FROM
-                                qualifying0 q
-                            JOIN
-                                results0 r ON q.raceId = r.raceId AND q.driverId = r.driverId
-                            GROUP BY q.position, q.raceId, q.driverId, r.points
+                                data
+                            WHERE {where}
+                            GROUP BY startingPosition, raceId, driverName, points
                         """
                         starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
-                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='DriverId')
+                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='DriverName',title='How Starting Position Duration Affect Result')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1,col2,col3,col4 = st.columns(4)
+                    col1,col2,col3 = st.columns(3)
                     with col1:
 
                 ##################################################################################################
@@ -382,16 +440,16 @@ with st.container():
                                 SUM(points) AS Points
                             FROM
                                 data
-                            WHERE year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver}
+                            WHERE {where}
                             GROUP BY
                                 driverName, driverNationality
                             ORDER BY
                                 Points DESC
                             """
                         top_racers_with_points = duckdb_connection.execute(top_racers_with_points_query).df()
-                        fig = ff.create_table(top_racers_with_points.head(15), height_constant=30)
+                        fig = ff.create_table(top_racers_with_points.head(10), height_constant=40)
                         fig.layout.margin.update({'t':75})
-                        fig.layout.update({'title': 'Top Racers'})
+                        fig.layout.update({'title': 'Top 10 Racers','title_x':0.3})
                         st.plotly_chart(fig, use_container_width=True)
                     with col2:
                 ##################################################################################################
@@ -407,7 +465,7 @@ with st.container():
                                 data
                             WHERE
                                 status IN ('Accident','Engine', 'Did not qualify', 'Collision', 'Gearbox', 'Spun off', 'Suspension', 'Did not prequalify', 'Transmission', 'Electrical')
-                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver})
+                                AND {where}
                             GROUP BY status
                             ORDER BY Driver ASC
                             """
@@ -422,10 +480,9 @@ with st.container():
                             title='Most Reason Driver Don\'t Finished Race',
                             xaxis_title='Driver',
                             yaxis_title='Status',
-                            title_x=0.2,
+                            title_x=0.1,
                             clickmode='event+select'
                         )
-                        fig.update_xaxes(tickformat=".2s")
                         st.plotly_chart(fig, use_container_width=True)
                     with col3:
 
@@ -437,11 +494,11 @@ with st.container():
                         finished_race_query = f"""
                             SELECT 
                                 (SELECT COUNT(driverName) FROM data) AS All_Drivers,
-                                (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data)) AS Percentage_Finished
+                                (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data WHERE {where})) AS Percentage_Finished
                             FROM
                                 data
                             WHERE status IN ('Finished') 
-                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
+                                AND {where};
                         """
                         finished_race = duckdb_connection.execute(finished_race_query).df()
                         gauge(finished_race.loc[0,'Percentage_Finished']," %","Finished Race (%)")
@@ -454,25 +511,37 @@ with st.container():
                         accident_race_query = f"""
                             SELECT 
                                 (SELECT COUNT(driverName) FROM data) AS All_Drivers,
-                                (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data)) AS Percentage_Accident
+                                (COUNT(driverName) * 100.0 / (SELECT COUNT(driverName) FROM data WHERE {where})) AS Percentage_Accident
                             FROM
                                 data
                             WHERE status IN ('Accident')
-                                AND (year BETWEEN {selected_start_year_driver} AND {selected_end_year_driver});
+                                AND {where};
                         """
                         accident_race = duckdb_connection.execute(accident_race_query).df()
                         gauge(accident_race.loc[0,'Percentage_Accident']," %","Accident (%)")
-                    with col4:
+                    #with col4:
 
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                             How Pit Stop Duration Affect Result                              ##
                 ##                                                                                              ##
                 ##################################################################################################
-
-                        df = px.data.tips()
-                        scatter(df, x="total_bill", y="tip")
-
+                    #    # Your SQL query
+                    #    duration_affect_result_query = f"""
+                    #        SELECT duration AS Duration,
+                    #            driverName AS DriverName,
+                    #            points AS Points
+                    #        FROM data
+                    #        WHERE {where}
+                    #        GROUP BY duration, raceId, driverName, points
+                    #    """
+#
+                    #    # Execute the query and fetch the results into a DataFrame
+                    #    duration_affect_result = duckdb_connection.execute(duration_affect_result_query).df()
+#
+                    #    # Create a scatter plot using plotly express
+                    #    scatter(duration_affect_result, x="Duration", y="Points",title='How Pit Stop Duration Affect Result',marker_color='DriverName')
+#
                 ##################################################################################################
                 ##                                                                                              ##
                 ##                          Tab 2: Is for teams                                                 ##
@@ -481,36 +550,43 @@ with st.container():
     with tab_2:
         with st.container():
             cols = st.columns(5)
+            where_team_dict = {}
             for i in range(len(cols)):
                 with cols[i]:
                     if i == 0:
-                        expander_label = "Race Name"
+                        expander_label = "Race_Name"
                         column_data = data['GPName']
                         text = 'team_'
                     elif i == 1:
-                        expander_label = "Driver Name"
+                        expander_label = "Driver_Name"
                         column_data = data['driverName']
                         text = 'team_'
                     elif i == 2:
-                        expander_label = "Driver Nationality"
+                        expander_label = "Driver_Nationality"
                         column_data = data['driverNationality']
                         text = 'team_'
                     elif i == 3:
-                        expander_label = "Brand Name"
+                        expander_label = "Brand_Name"
                         column_data = data['brand']
                         text = 'team_'
                     elif i == 4:
-                        expander_label = "Brand Nationality"
+                        expander_label = "Brand_Nationality"
                         column_data = data['brandNationality']
                         text = 'team_brand_'
 
-                    with st.expander(expander_label):
+                    with st.expander(expander_label.replace('_',' ')):
                         # Get unique items in the column
                         unique_items = column_data.unique()
 
                         # Display the selected items
-                        for item in unique_items:
-                            st.checkbox(item, key=f"check_all_{text}{item}")
+                        if f"all_option_{text}{expander_label}" not in st.session_state:
+                            st.session_state[f"all_option_{text}{expander_label}"] = True
+                            st.session_state[f"selected_options_{text}{expander_label}"] = list(unique_items)
+
+                        # Display the selected items
+                        all = st.checkbox("Select all", key=f"all_option_{text}{expander_label}",on_change= partial(check_change, text, expander_label, column_data))
+                        options = st.multiselect('',list(unique_items),key=f"selected_options_{text}{expander_label}", on_change=partial(multi_change, text, expander_label, column_data))
+                        where_team_dict[expander_label]= st.session_state[f'selected_options_{text}{expander_label}']
 
                         st.markdown(
                             """
@@ -537,6 +613,19 @@ with st.container():
             # Validate and use the selected years
             if year_values_brand[0] <= year_values_brand[1]:
                 selected_start_year, selected_end_year = year_values_brand
+                driverNamesTeam = parameterize_SQL_in_statement(where_team_dict["Driver_Name"])
+                driverNationalitiesTeam = parameterize_SQL_in_statement(where_team_dict["Driver_Nationality"])
+                brandsTeam =  parameterize_SQL_in_statement(where_team_dict["Brand_Name"])
+                brandNationalitiesTeam = parameterize_SQL_in_statement(where_team_dict["Brand_Nationality"])
+                raceNamesTeam = parameterize_SQL_in_statement(where_team_dict["Race_Name"])
+                where_team = f"""
+                    (year BETWEEN {selected_start_year} AND {selected_end_year})
+                    AND driverName IN {driverNamesTeam}
+                    AND driverNationality IN {driverNationalitiesTeam}
+                    AND brand IN {brandsTeam}
+                    AND brandNationality IN {brandNationalitiesTeam}
+                    AND GPName IN {raceNamesTeam}
+                """
                 with col2:
                     col4,col5 = st.columns(2)
                     with col4:
@@ -549,7 +638,7 @@ with st.container():
 
                         total_brands = duckdb.sql(f"""
                             SELECT COUNT(DISTINCT brand) AS Brand From data
-                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                         """).df()
                         component2("Total Brands", total_brands.loc[0,'Brand'])
                     with col5:
@@ -566,8 +655,7 @@ with st.container():
                                     COUNT(DISTINCT GPName) AS total_GP
                                 FROM
                                     data
-                                WHERE
-                                    year BETWEEN {selected_start_year} AND {selected_end_year}
+                                WHERE {where_team}
                                 GROUP BY year
                             """
                             result_df = duckdb_connection.execute(total_races).df()
@@ -591,12 +679,18 @@ with st.container():
                             FROM
                                 data
                             WHERE
-                                positionOrder = 1 AND ( year BETWEEN {selected_start_year} AND {selected_end_year})
+                                positionOrder = 1 AND {where_team}
                             GROUP BY Brand
                             ORDER BY COUNT(positionOrder) DESC
                         """
                         most_winning_brand = duckdb_connection.execute(most_winning_brand_query).df()
-                        component("Most Winning Brand",most_winning_brand.loc[0,'Brand'], most_winning_brand.loc[0,'TotalWin'])
+                        if not most_winning_brand.empty:
+                            mostWinningBrand = most_winning_brand.loc[0,'Brand']
+                            totalBrandWin = most_winning_brand.loc[0,'TotalWin']
+                        else:
+                            mostWinningBrand = ''
+                            totalBrandWin = ''
+                        component("Most Winning Brand",mostWinningBrand, totalBrandWin)
                     with col7:
 
                 ##################################################################################################
@@ -611,13 +705,19 @@ with st.container():
                                 brand AS MostParticipating
                             FROM
                                 data
-                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                             GROUP BY brand
                             ORDER BY MaxParticipation DESC
                             LIMIT 1
                         """
                         most_participating_brand = duckdb_connection.execute(most_participating_brand_query).df()
-                        component("Most Participating Brand",most_participating_brand.loc[0,'MostParticipating'], most_participating_brand.loc[0,'MaxParticipation'])
+                        if not most_participating_brand.empty:
+                            mostBrandParticipating = most_participating_brand.loc[0,'MostParticipating']
+                            maxBrandParticipating = most_participating_brand.loc[0,'MaxParticipation']
+                        else:
+                            mostBrandParticipating = ''
+                            maxBrandParticipating = ''
+                        component("Most Participating Brand", mostBrandParticipating, maxBrandParticipating)
                     with col8:
 
                 ##################################################################################################
@@ -632,7 +732,7 @@ with st.container():
                                 brand AS MaxSpeedBrand
                             FROM 
                                 data
-                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                             GROUP BY brand
                             ORDER BY MaxSpeed DESC
                             LIMIT 1
@@ -662,9 +762,9 @@ with st.container():
                                 data,
                                 (SELECT COUNT(DISTINCT brand) AS Total 
                                 FROM data 
-                                WHERE year BETWEEN {selected_start_year} AND {selected_end_year})
+                                WHERE {where_team})
 
-                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                             GROUP BY brandNationality, Total
                             ORDER BY Percentage DESC
                             LIMIT 4
@@ -688,7 +788,7 @@ with st.container():
                                 year as Season
                             FROM
                                 data
-                            WHERE Season BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                             GROUP BY year
                             ORDER BY year
                         """
@@ -705,20 +805,18 @@ with st.container():
 
                         starting_position_affect_result_query = f"""
                             SELECT
-                                q.position AS 'Starting Position', 
-                                q.constructorId AS ConstructorId,
-                                r.points AS Points
-                            FROM
-                                qualifying0 q
-                            JOIN
-                                results0 r ON q.raceId = r.raceId AND q.constructorId = r.constructorId
-                            GROUP BY q.position, q.raceId, q.constructorId, r.points
+                                startingPosition AS 'Starting Position', 
+                                brand AS Brand,
+                                points AS Points
+                            FROM data
+                            WHERE {where_team}
+                            GROUP BY startingPosition, raceId, brand, points
                         """
                         starting_position_affect_result = duckdb_connection.execute(starting_position_affect_result_query).df()
-                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='ConstructorId')
+                        scatter(starting_position_affect_result, x="Starting Position", y="Points",marker_color='Brand',title='How Starting Position Duration Affect Result')
                 with st.container():
                     st.markdown("<br><br>",unsafe_allow_html=True)
-                    col1, col2, col3,  col4 = st.columns(4)
+                    col1, col2, col3 = st.columns(3)
                     with col1:
                 
                 ##################################################################################################
@@ -734,16 +832,16 @@ with st.container():
                                 SUM(points) AS Points
                             FROM
                                 data
-                            WHERE year BETWEEN {selected_start_year} AND {selected_end_year}
+                            WHERE {where_team}
                             GROUP BY
                                 brand, brandNationality
                             ORDER BY
                                 Points DESC
                         """
                         top_brands_with_points = duckdb_connection.execute(top_brands_with_points_query).df()
-                        fig = ff.create_table(top_brands_with_points.head(15), height_constant=30)
+                        fig = ff.create_table(top_brands_with_points.head(10), height_constant=50)
                         fig.layout.margin.update({'t':75})
-                        fig.layout.update({'title': 'Top Brands'})
+                        fig.layout.update({'title': 'Top 10 Brands','title_x':0.3})
                         st.plotly_chart(fig, use_container_width=True)
 
                     
@@ -765,7 +863,7 @@ with st.container():
                                 data
                             WHERE
                                 status IN ('Finished','Accident','Engine', 'Did not qualify', 'Collision', 'Gearbox', 'Spun off', 'Did not prequalify', 'Transmission')
-                                AND (year BETWEEN {selected_start_year} AND {selected_end_year})
+                                AND {where_team}
                             GROUP BY status
                             ORDER BY Brand ASC
                         """
@@ -780,7 +878,7 @@ with st.container():
                             title='Brands Performance Status',
                             xaxis_title='Brand',
                             yaxis_title='Status',
-                            title_x=0.2,
+                            title_x=0.3,
                             clickmode='event+select'
                         )
                         fig.update_xaxes(tickformat=".2s")
@@ -796,11 +894,11 @@ with st.container():
                 ##################################################################################################
                         finished_race_brand_query = f"""
                             SELECT 
-                                (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Finished
+                                (SELECT COUNT(brand) FROM data WHERE {where_team}) AS All_Brands,
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data WHERE {where_team})) AS Percentage_Finished
                             FROM
                                 data
-                            WHERE status IN ('Finished') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+                            WHERE status IN ('Finished') AND {where_team};
 
                         """
                         finished_race_brand = duckdb_connection.execute(finished_race_brand_query).df()
@@ -815,10 +913,10 @@ with st.container():
                         accident_race_brand_query = f"""
                             SELECT 
                                 (SELECT COUNT(brand) FROM data) AS All_Brands,
-                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data)) AS Percentage_Accident
+                                (COUNT(brand) * 100.0 / (SELECT COUNT(brand) FROM data WHERE {where_team})) AS Percentage_Accident
                             FROM
                                 data
-                            WHERE status IN ('Accident') AND (year BETWEEN {selected_start_year} AND {selected_end_year});
+                            WHERE status IN ('Accident') AND {where_team};
 
                         """
                         accident_race_brand = duckdb_connection.execute(accident_race_brand_query).df()
