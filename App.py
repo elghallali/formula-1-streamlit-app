@@ -39,86 +39,67 @@ with col_logos_2:
     st.markdown("""
             <style>
                 .logos {
-                    background-color: white;
-                    height: 170px;
+                    background-color: #fff;
+                    height: 6em;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     border-radius: 0 0 5px 5px;
+                    margin-bottom: 30px;
                 }
-                .logos {
-                background-color: #fff;
-                height: 6em;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                border-radius: 0 0 5px 5px;
-                margin-bottom: 30px;
-            }
                 
-            .logos img:nth-child(odd) {
-                width:5em;
-                height: 90%;
-    
-            }
-    
-            .logos img:nth-child(even) {
-                width:8em;
-                height: 90%;
-            }
-            
-            @media screen and (min-width: 780px) {
-                .logos {
-                    height: 8em;
-                    
-                }
                 .logos img:nth-child(odd) {
+                    width:5em;
+                    height: 90%;
+    
+                }
+    
+                .logos img:nth-child(even) {
                     width:8em;
+                    height: 90%;
+                }    
+            
+                @media screen and (min-width: 780px) {
+                    .logos {
+                        height: 8em;
                     
+                    }
+                    .logos img:nth-child(odd) {
+                        width:8em;
+                    }
         
-                }
-        
-                .logos img:nth-child(even) {
-                    width:20em;
-                    
-                }
-            }
-        
-            @media screen and (min-width: 992px) {
-                .logos {
-                    
-                    height: 10em;
-                    
-                }
-                .logos img:nth-child(odd) {
-                    width:10em;
-                    
-        
+                    .logos img:nth-child(even) {
+                        width:20em;  
+                    }
                 }
         
-                .logos img:nth-child(even) {
-                    width:25em;
-                    
-                }
-            }
+                @media screen and (min-width: 992px) {
+                    .logos {
+                        height: 10em;
+                    }
+                    .logos img:nth-child(odd) {
+                        width:10em;
+                    }
         
-            @media screen and (min-width: 1200px) {
-                .logos {
-                    height: 12em;
-                    
-                    
-                }
-                .logos img:nth-child(odd) {
-                    width:12em;
-                    height: 80%;
+                    .logos img:nth-child(even) {
+                        width:25em;
+                    }
                 }
         
-                .logos img:nth-child(even) {
-                    width:20em;
-                    height: 70%;
-                   
-                }
-            }
+                @media screen and (min-width: 1200px) {
+                    .logos {
+                        height: 12em;
+                    }
+                    .logos img:nth-child(odd) {
+                        width:12em;
+                        height: 80%;
+                    }
+        
+                    .logos img:nth-child(even) {
+                        width:20em;
+                        height: 70%; 
+                    }
+                }    
                 
             </style>
             <div class="logos">
