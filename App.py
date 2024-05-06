@@ -267,7 +267,7 @@ with st.container():
     with tool9:
         st.markdown("""
                  <div class="image">
-                 <img src="https://camo.githubusercontent.com/20db5efd6873b071b1c72818028df47ce86c511d7560e789c34ba1811593c3eb/68747470733a2f2f73746f72652d696d616765732e732d6d6963726f736f66742e636f6d2f696d6167652f617070732e33363836382e62666230653265652d626539652d346337332d383037662d6530613762383035623162652e37313261666635642d353830302d343765302d393762652d3538643137616461336662382e61343638343565362d636539342d343463662d383932622d353436333763366663663036" alt="" with=80 height=80>
+                 <img src="https://raw.githubusercontent.com/devicons/devicon/6910f0503efdd315c8f9b858234310c06e04d9c0/icons/plotly/plotly-original-wordmark.svg" alt="" with=80 height=80>
                  </div>
                  """, unsafe_allow_html=True)
     with tool10:
@@ -282,7 +282,7 @@ with st.container():
     with tool11:
         st.markdown("""
                  <div class="image">
-                 <img src="https://camo.githubusercontent.com/9f56ecb12a5b746c29c31e08e91a1f3cf483f8a3657118be1530cf8c3ae674a2/68747470733a2f2f6475636b64622e6f72672f696d616765732f6c6f676f2d646c2f4475636b44425f4c6f676f2d737461636b65642e737667" alt="" with=80 height=60>
+                 <img src="https://duckdb.org/images/logo-dl/DuckDB_Logo.png" alt="" with=80 height=60>
                  </div>
                  """, unsafe_allow_html=True)
 
