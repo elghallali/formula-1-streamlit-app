@@ -1,3 +1,6 @@
+[![Formula 1 Docker Image](https://github.com/elghallali/formula-1-streamlit-app/actions/workflows/test-build.yml/badge.svg)](https://github.com/elghallali/formula-1-streamlit-app/actions/workflows/test-build.yml)
+
+
 <div>
   <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/fsjest.jpg" title="fsjest" alt="fsjest" width="150" height="150" align="left"/>
   <img src="https://github.com/elghallali/my-images/blob/master/Faculty%20Official/uae.png" title="UAE" **alt="UAE" width="150" height="150" align="right"/>
